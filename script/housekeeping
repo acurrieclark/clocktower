@@ -1,0 +1,14 @@
+#!/usr/bin/php
+
+<?php
+
+	ini_set('memory_limit', '-1');
+
+	define('ROOT', dirname(dirname(__FILE__)));
+	define('DS', "/");
+
+	require(ROOT."/script/script_includes.php");
+
+	// database maintenance code should go here
+
+?>

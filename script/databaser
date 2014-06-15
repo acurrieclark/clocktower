@@ -1,0 +1,60 @@
+#!/usr/bin/php
+
+<?php
+
+define('ROOT', dirname(dirname(__FILE__)));
+define('DS', "/");
+
+require(ROOT."/script/script_includes.php");
+
+$files = getDirectoryList(ROOT.'/application/structures');
+
+foreach ($files as $file) {
+	if (strpos($file,'.php') && $file != "users.php") {
+		$models[] = ROOT.'/application/structures/'.$file;
+	}
+}
+
+$files = getDirectoryList(ROOT.'/library/structures');
+
+foreach ($files as $file) {
+	if (strpos($file,'.php')) {
+		$models[] = ROOT.'/library/structures/'.$file;
+	}
+}
+
+
+if (empty($models)) {
+	echo "No structures found\n";
+	return;
+}
+else {
+
+	$models_added = array();
+
+	foreach ($models as $model) {
+		if (file_exists($model)) {
+			include($model);
+		}
+		else {
+			fwrite(STDOUT, "Model file could not be found\n");
+			return;
+		}
+
+		$filename_split = explode('/', $model);
+		$model_name = str_replace(".php", "", $filename_split[sizeof($filename_split)-1]);
+
+		try {
+			add_model_to_database($model_name);
+		} catch (Exception $e) {
+			echoc($e->getMessage()."\n", RED);
+			return;
+		}
+
+	}
+
+}
+
+
+
+?>

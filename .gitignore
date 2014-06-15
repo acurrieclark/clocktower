@@ -1,0 +1,17 @@
+tmp
+public/files
+*~
+.DS_Store
+application/controllers/*
+!application/controllers/application.php
+application/forms/*
+application/helpers/*
+application/models/*
+application/static/*
+!application/static/index.php
+!application/static/phpinfo.php
+application/structures/*
+application/views/*
+!application/views/application
+application/views/application/*
+!application/views/application/template.php

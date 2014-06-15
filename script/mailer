@@ -1,0 +1,43 @@
+#!/usr/bin/php
+
+<?php
+
+$tempDir = sys_get_temp_dir() . "/";
+$fp = fopen($tempDir."mailer_lock.txt", "w+");
+
+if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
+    // do the work
+
+	define('ROOT', dirname(dirname(__FILE__)));
+	define('DS', "/");
+	include (ROOT."/library/app_functions.php");
+	include (ROOT."/library/core_functions.php");
+	include (ROOT."/library/helpers.php");
+	require (ROOT."/config/database.php");
+	require (ROOT."/config/config.php");
+	require (ROOT."/config/server-config.php");
+	require (ROOT."/config/inflection.php");
+	require (ROOT."/library/inflection.class.php");
+	require (ROOT."/library/setup_functions.php");
+	require (ROOT . DS . 'library' . DS . 'element.class.php');
+	require_once (ROOT . DS . 'library' . DS . 'mailer'. DS . 'swift_required.php');
+	// adds main app autoloader so as not to interfere with other loaders
+	spl_autoload_register('mvacc_autoload');
+
+	$app = new stdClass();
+
+	logger::mailer('script/mailer Running');
+
+	mailer::send_stored();
+
+	logger::write();
+
+    flock($fp, LOCK_UN); // release the lock
+} else {
+    echo "Already Running";
+}
+
+fclose($fp);
+
+
+?>

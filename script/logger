@@ -1,0 +1,15 @@
+clear
+echo "Logger started at $(date)"
+
+tail -c 0 -F tmp/logs/development.log | perl -pe '	s/Invalid/\e[1;4;31m$&\e[0m/g;
+													s/Posted/\e[1;4;35m$&\e[0m/g;
+													s/Valid/\e[1;4;32m$&\e[0m/g;
+													s/Database/\e[1;4;34m$&\e[0m/g;
+													s/Rendering/\e[1;4;36m$&\e[0m/g;
+													s/Sending/\e[1;4;36m$&\e[0m/g;
+													s/Ajax Request Received/\e[1;4;33m$&\e[0m/g;
+													s/Request Received/\e[1;4;33m$&\e[0m/g;
+													s/Redirecting/\e[1;4;35m$&\e[0m/g;
+													s/Not Found/\e[1;4;31m$&\e[0m/g;
+													s/Error/\e[1;4;31m$&\e[0m/g;'
+
