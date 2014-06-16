@@ -1,7 +1,6 @@
-tmp
-public/files
 *~
 .DS_Store
+tmp/logs/*
 application/controllers/*
 !application/controllers/application.php
 application/forms/*

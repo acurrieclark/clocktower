@@ -38,7 +38,10 @@ class logger
 		$logger_mask = array('Back');
 
 		if ($function == 'write') {
-			if ($handle = fopen( ROOT.DS.'tmp/logs/development.log', "a+") )
+			if (!file_exists( ROOT.DS.'tmp/logs/development.log')) {
+				file_put_contents( ROOT.DS.'tmp/logs/development.log', $log);
+			}
+			else if ($handle = fopen( ROOT.DS.'tmp/logs/development.log', "a+") )
 			{
 				if( !fwrite( $handle, $log ))
 				{
