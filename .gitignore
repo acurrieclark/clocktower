@@ -5,6 +5,7 @@ application/controllers/*
 !application/controllers/application.php
 application/forms/*
 application/helpers/*
+!application/helpers/application.php
 application/models/*
 application/static/*
 !application/static/index.php
@@ -15,3 +16,4 @@ application/views/*
 application/views/application/*
 !application/views/application/template.php
 files_list
+!*.htaccess
