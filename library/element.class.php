@@ -1037,9 +1037,9 @@ class date extends element
 class timepicker extends string {
 	function input() {
 
-		add_javascript('vendor/moment.min');
-		add_javascript('vendor/bootstrap-datetimepicker.min');
-		add_stylesheet('bootstrap-datetimepicker.min');
+		add_javascript('system/moment.min');
+		add_javascript('system/bootstrap-datetimepicker.min');
+		add_stylesheet('system/bootstrap-datetimepicker.min');
 
 		javascript_start();
 
@@ -1077,9 +1077,9 @@ class datepicker extends date
 
 	function input() {
 
-		add_javascript('vendor/moment.min');
-		add_javascript('vendor/bootstrap-datetimepicker.min');
-		add_stylesheet('bootstrap-datetimepicker.min');
+		add_javascript('system/moment.min');
+		add_javascript('system/bootstrap-datetimepicker.min');
+		add_stylesheet('system/bootstrap-datetimepicker.min');
 
 		javascript_start();
 

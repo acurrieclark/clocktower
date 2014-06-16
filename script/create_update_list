@@ -1,0 +1,32 @@
+#!/usr/bin/php
+
+<?php
+
+define('ROOT', dirname(dirname(__FILE__)));
+define('DS', "/");
+
+require(ROOT."/script/script_includes.php");
+
+function print_listing($listing, $breadcrumb = "") {
+	if ($breadcrumb != "") {
+		$breadcrumb .= DS;
+	}
+	foreach ($listing as $key => $value) {
+		if ($value != ".DS_Store") {
+			echo $breadcrumb.$key."\n";
+			if (is_array($value)) {
+			 	print_listing($value, $breadcrumb.$key);
+			}
+		}
+	}
+}
+
+$listing = getDirectoryList(ROOT, true);
+
+ob_start();
+
+print_listing($listing);
+
+$data = ob_get_clean();
+
+file_put_contents(ROOT.'/script/files_list', $data);

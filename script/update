@@ -12,7 +12,9 @@ mkdir( ROOT.'/update_files', 0777, true);
 
 shell_exec('git clone https://github.com/acurrieclark/clocktower.git '.ROOT.'/update_files');
 
-$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
+
+// UPDATE THIS LINE TO REFLECT REMOTE VERSION
+$file_handle = fopen(ROOT."/script/update_list", "rb");
 
 $count = 1;
 
@@ -21,7 +23,9 @@ while (!feof($file_handle) ) {
 
 $line_of_text = fgets($file_handle);
 
-echo $count. ": $line_of_text\n";
+if ($line_of_text != "") echo $count. ": $line_of_text\n";
+
+$count++;
 
 }
 

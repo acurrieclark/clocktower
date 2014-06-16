@@ -392,7 +392,7 @@ function merge_errors($from, &$to) {
 	}
 }
 
-function getDirectoryList ($directory)
+function getDirectoryList ($directory, $recursive = false)
   {
 
     // create an array to hold directory list
@@ -406,7 +406,11 @@ function getDirectoryList ($directory)
 
       // if file isn't this directory or its parent, add it to the results
       if ($file != "." && $file != "..") {
-        $results[] = $file;
+        if (is_dir($directory.DS.$file) && $recursive) {
+        	$results[$file] = getDirectoryList($directory.DS.$file, true);
+        }
+		else
+        	$results[$file] = $file;
       }
 
     }

@@ -14,3 +14,4 @@ application/views/*
 !application/views/application
 application/views/application/*
 !application/views/application/template.php
+files_list
