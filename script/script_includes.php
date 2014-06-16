@@ -1,6 +1,5 @@
 <?php
 
-include (ROOT."/library/app_functions.php");
 include (ROOT."/library/core_functions.php");
 include (ROOT."/library/helpers.php");
 require (ROOT."/config/database.php");

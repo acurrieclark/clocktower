@@ -1,0 +1,30 @@
+#!/usr/bin/php
+
+<?php
+
+define('ROOT', dirname(dirname(__FILE__)));
+define('DS', "/");
+
+require(ROOT."/script/script_includes.php");
+
+// create a temporary folder for th latest version
+mkdir( ROOT.'/update_files', 0777, true);
+
+shell_exec('git clone https://github.com/acurrieclark/clocktower.git '.ROOT.'/update_files');
+
+$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
+
+$count = 1;
+
+while (!feof($file_handle) ) {
+
+
+$line_of_text = fgets($file_handle);
+
+echo $count. ": $line_of_text\n";
+
+}
+
+fclose($file_handle);
+
+delete_directory( ROOT.'/update_files');

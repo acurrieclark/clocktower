@@ -392,57 +392,45 @@ function merge_errors($from, &$to) {
 	}
 }
 
-function getDirectory( $path = '.', $recursive = false, $level = 0 )
-{
+function getDirectoryList ($directory)
+  {
 
-	$directory_tree = array();
+    // create an array to hold directory list
+    $results = array();
 
-// Directories to ignore when listing output.
-$ignore = array( '.', '..' );
+    // create a handler for the directory
+    $handler = opendir($directory);
 
-// Open the directory to the handle $dh
-$dh = @opendir( $path );
+    // open directory and walk through the filenames
+    while ($file = readdir($handler)) {
 
-// Loop through the directory
-while( false !== ( $file = readdir( $dh ) ) )
-{
-// Check that this file is not to be ignored
-if( !in_array( $file, $ignore ) )
-{
-// Indent spacing for better view
-$spaces = str_repeat( '&nbsp;', ( $level * 5 ) );
+      // if file isn't this directory or its parent, add it to the results
+      if ($file != "." && $file != "..") {
+        $results[] = $file;
+      }
 
-// Show directories only
-if(is_dir( "$path/$file" ) ) {
-	$directory = new StdClass();
-	$directory->name = $file;
-	$directory->sub_directories = ($recursive) ? getDirectory( "$path/$file", $recursive, ($level+1)) : false ;
-	$directory_tree[] = $directory;
-	}
-}
-}
-// Close the directory handle
-closedir( $dh );
-return $directory_tree;
-}
-
-function delete_directory($dirPath) {
-    if (! is_dir($dirPath)) {
-        throw new InvalidArgumentException("$dirPath must be a directory");
     }
-    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-        $dirPath .= '/';
-    }
-    $files = glob($dirPath . '*', GLOB_MARK);
-    foreach ($files as $file) {
-        if (is_dir($file)) {
-            delete_directory($file);
-        } else {
-            unlink($file);
-        }
-    }
-    rmdir($dirPath);
-}
+
+    // tidy up: close the handler
+    closedir($handler);
+
+    // done!
+    return $results;
+
+  }
+
+function delete_directory($dir) {
+   if (is_dir($dir)) {
+     $objects = scandir($dir);
+     foreach ($objects as $object) {
+       if ($object != "." && $object != "..") {
+         if (filetype($dir."/".$object) == "dir") delete_directory($dir."/".$object); else unlink($dir."/".$object);
+       }
+     }
+     reset($objects);
+     rmdir($dir);
+   }
+ }
 
 ############## Flash and Error Messages ##############
 

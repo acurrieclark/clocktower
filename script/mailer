@@ -10,7 +10,6 @@ if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
 
 	define('ROOT', dirname(dirname(__FILE__)));
 	define('DS', "/");
-	include (ROOT."/library/app_functions.php");
 	include (ROOT."/library/core_functions.php");
 	include (ROOT."/library/helpers.php");
 	require (ROOT."/config/database.php");

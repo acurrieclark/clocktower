@@ -10,7 +10,6 @@ require_once (ROOT . DS . 'config' . DS . 'database.php');
 require_once (ROOT . DS . 'config' . DS . 'inflection.php');
 require_once (ROOT . DS . 'config' . DS . 'validations.php');
 
-require_once (ROOT . DS . 'library' . DS . 'app_functions.php');
 require_once (ROOT . DS . 'library' . DS . 'core_functions.php');
 require_once (ROOT . DS . 'library' . DS . 'setup_functions.php');
 require_once (ROOT . DS . 'library' . DS . 'helpers.php');
