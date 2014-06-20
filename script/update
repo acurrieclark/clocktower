@@ -7,25 +7,33 @@ define('DS', "/");
 
 require(ROOT."/script/script_includes.php");
 
-// create a temporary folder for th latest version
-mkdir( ROOT.'/update_files', 0777, true);
+// // create a temporary folder for th latest version
+// mkdir( ROOT.'/update_files', 0777, true);
 
 shell_exec('git clone https://github.com/acurrieclark/clocktower.git '.ROOT.'/update_files');
 
 
 // UPDATE THIS LINE TO REFLECT REMOTE VERSION
-$file_handle = fopen(ROOT."/script/update_list", "rb");
+$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
 
 $count = 1;
 
 while (!feof($file_handle) ) {
 
 
-$line_of_text = fgets($file_handle);
+$line_of_text = trim(fgets($file_handle));
 
-if ($line_of_text != "") echo $count. ": $line_of_text\n";
+if ($line_of_text != "")
+	{
+		echo $count. ": '$line_of_text'";
 
-$count++;
+		if (file_exists(ROOT . DS . "update_files". DS . $line_of_text)) {
+			echo "...found\n";
+		}
+		else echo "...missing\n";
+
+		$count++;
+	}
 
 }
 

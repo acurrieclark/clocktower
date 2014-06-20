@@ -1,0 +1,15 @@
+#!/usr/bin/php
+
+<?php
+
+define('ROOT', dirname(dirname(__FILE__)));
+define('DS', "/");
+
+require(ROOT."/script/script_includes.php");
+
+echo "===========================\n";
+echo "Welcome to Clocktower setup\n";
+echo "===========================\n\n";
+
+
+echo "Setup Complete\n";

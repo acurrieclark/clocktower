@@ -1,6 +1,6 @@
 *~
 .DS_Store
-tmp/logs/*
+tmp/logs/*.log
 application/controllers/*
 !application/controllers/application.php
 application/forms/*

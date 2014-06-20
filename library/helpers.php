@@ -270,13 +270,13 @@ function messages() {
 	global $flash;
 
 if ($flash->message) {?>
-	<div class="alert alert-success">
+	<div class="alert alert-success alert-dismissable">
 	 	<button class="close" data-dismiss="alert">×</button>
 		<?php echo $flash->message; ?>
 	</div>
 <?php } ?>
 <?php if ($flash->error) {?>
-	<div class="alert alert-error">
+	<div class="alert alert-error alert-dismissable">
 	 	<button class="close" data-dismiss="alert">×</button>
 		<?php echo $flash->error; ?>
 	</div>
@@ -284,13 +284,13 @@ if ($flash->message) {?>
 <?php }
 ?>
 <?php if ($flash->warning): ?>
-	<div class="alert">
+	<div class="alert alert-warning alert-dismissable">
 	  <button class="close" data-dismiss="alert">×</button>
 	  <strong>Warning - </strong> <?= $flash->warning ?>
 	</div>
 <?php endif ?>
 <?php if ($flash->information): ?>
-	<div class="alert alert-info">
+	<div class="alert alert-info alert-dismissable">
 	  <button class="close" data-dismiss="alert">×</button>
 	  <?= $flash->information ?>
 	</div>

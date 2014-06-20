@@ -39,6 +39,10 @@ class logger
 
 		if ($function == 'write') {
 			if (!file_exists( ROOT.DS.'tmp/logs/development.log')) {
+				if (!is_writable(dirname(ROOT.DS.'tmp/logs/development.log'))) {
+					echo "<div class=\"alert alert-warning container\"><strong>Warning</strong> - Log file not writable.</div>";
+				}
+				else
 				file_put_contents( ROOT.DS.'tmp/logs/development.log', $log);
 			}
 			else if ($handle = fopen( ROOT.DS.'tmp/logs/development.log', "a+") )
