@@ -436,6 +436,25 @@ function delete_directory($dir) {
    }
  }
 
+function recurse_copy($src,$dst, $noisy = false) {
+	if ($noisy) echo "Copying $src\n";
+	if (is_dir($src)) {
+		$dir = opendir($src);
+    	@mkdir($dst);
+    	while(false !== ( $file = readdir($dir)) ) {
+	        if (( $file != '.' ) && ( $file != '..' )) {
+                recurse_copy($src . '/' . $file,$dst . '/' . $file);
+	        }
+    }
+    closedir($dir);
+
+	}
+
+	else copy ($src, $dst);
+
+
+}
+
 ############## Flash and Error Messages ##############
 
 function flash($message) {

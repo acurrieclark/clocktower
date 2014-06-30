@@ -7,36 +7,206 @@ define('DS', "/");
 
 require(ROOT."/script/script_includes.php");
 
-// // create a temporary folder for th latest version
-// mkdir( ROOT.'/update_files', 0777, true);
+echo "Clocktower Update Script\n";
+echo "What would you like to do?\n";
+echo "1. Check for an update\n";
+echo "2. Update Clocktower\n";
+echo "3. Backup your root directory\n";
+echo '(1, 2 or 3): ';
 
-shell_exec('git clone https://github.com/acurrieclark/clocktower.git '.ROOT.'/update_files');
+$invalid = true;
 
-
-// UPDATE THIS LINE TO REFLECT REMOTE VERSION
-$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
-
-$count = 1;
-
-while (!feof($file_handle) ) {
-
-
-$line_of_text = trim(fgets($file_handle));
-
-if ($line_of_text != "")
-	{
-		echo $count. ": '$line_of_text'";
-
-		if (file_exists(ROOT . DS . "update_files". DS . $line_of_text)) {
-			echo "...found\n";
+while ($invalid == true) {
+	$stdin = fopen('php://stdin', 'r');
+	$response = fgetc($stdin);
+	if ($response == '1') {
+		$invalid = false;
+		//check for an update
+		if (check_for_update()) {
+			echo "Update available\n";
+			exit;
 		}
-		else echo "...missing\n";
-
-		$count++;
+		else {
+			echo "Clocktower is up to date\n";
+			exit;
+		}
 	}
+	else if ($response == '2') {
+		update_files();
+		$invalid = false;
+	}
+	else if ($response == '3') {
+		$invalid = false;
+	}
+	else if ($response == "exit" || $response == "Exit") {
+		echo "Exiting\n";
+		exit;
+	}
+	else {
+		$invalid = true;
+	}
+}
+
+function check_for_update() {
+	// create a temporary folder for th latest version
+	if (!@mkdir( ROOT.'/update_files', 0777, true)) {
+			echo "Could not write to the root folder. Please check permissions.\n";
+		exit;
+	}
+	echo "Checking for Update\n";
+	echo "Downloading latest version...\n";
+	shell_exec('git clone https://github.com/acurrieclark/clocktower.git '.ROOT.'/update_files');
+
+	$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
+
+	$count = 1;
+
+	echo "Checking files for updates...\n";
+
+	while (!feof($file_handle) ) {
+
+
+	$line_of_text = trim(fgets($file_handle));
+
+	if ($line_of_text != "")
+		{
+
+			if (file_exists(ROOT . DS . "update_files". DS . $line_of_text)) {
+				if (!file_exists(ROOT . DS . $line_of_text)) {
+					fclose($file_handle);
+					delete_directory( ROOT.'/update_files');
+					return true;
+				}
+				else {
+					if (is_dir(ROOT . DS . "update_files". DS . $line_of_text)) {
+						$diffs = dir_diffs(ROOT . DS . $line_of_text, ROOT . DS . "update_files". DS . $line_of_text);
+						if (!empty($diffs)) {
+							fclose($file_handle);
+							delete_directory( ROOT.'/update_files');
+							return true;
+						}
+					}
+					else {
+						if (!md5_file(ROOT . DS . "update_files". DS . $line_of_text) == md5_file(ROOT . DS . $line_of_text))
+						{
+							fclose($file_handle);
+							delete_directory( ROOT.'/update_files');
+							return true;
+						}
+
+					}
+				}
+			}
+			else {
+				return true;
+				fclose($file_handle);
+				delete_directory( ROOT.'/update_files');
+			}
+
+			$count++;
+		}
+
+	}
+
+	fclose($file_handle);
+
+	delete_directory( ROOT.'/update_files');
+
+	return false;
 
 }
 
-fclose($file_handle);
+function update_files() {
+	// create a temporary folder for th latest version
+	if (!@mkdir( ROOT.'/update_files', 0777, true)) {
+			echo "Could not write to the root folder. Please check permissions.\n";
+		exit;
+	}
 
-delete_directory( ROOT.'/update_files');
+	echo "Updating Clocktower\n";
+	echo "Downloading latest version...\n";
+	shell_exec('git clone https://github.com/acurrieclark/clocktower.git '.ROOT.'/update_files');
+
+	if (!HZip::zipDir(ROOT)) exit;
+
+	$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
+
+	$count = 1;
+
+	while (!feof($file_handle) ) {
+
+
+	$line_of_text = trim(fgets($file_handle));
+
+	if ($line_of_text != "")
+		{
+			echo $count. ": Copying - '$line_of_text'\n";
+
+			recurse_copy(ROOT . DS . DS . "update_files". $line_of_text, ROOT . DS . $line_of_text);
+
+			$count++;
+		}
+
+	}
+
+	fclose($file_handle);
+
+	delete_directory( ROOT.'/update_files');
+}
+
+function compare_files() {
+	$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
+
+	$count = 1;
+
+	while (!feof($file_handle) ) {
+
+
+	$line_of_text = trim(fgets($file_handle));
+
+	if ($line_of_text != "")
+		{
+			echo $count. ": '$line_of_text'";
+
+			if (file_exists(ROOT . DS . "update_files". DS . $line_of_text)) {
+				echo "...found";
+				if (!file_exists(ROOT . DS . $line_of_text)) {
+					echo "...NEW FILE\n";
+				}
+				else {
+					if (is_dir(ROOT . DS . "update_files". DS . $line_of_text)) {
+						$diffs = dir_diffs(ROOT . DS . $line_of_text, ROOT . DS . "update_files". DS . $line_of_text);
+						if (empty($diffs)) {
+							echo " and folder is unchanged\n";
+						}
+						else {
+							echo " and folder contents are ";
+							echoc("DIFFERENT\n", 'RED');
+							echo "--- DIFFERENCES FOUND ---\n";
+							foreach($diffs as $text) {
+								echo "$text\n";
+							}
+							echo "-------------------------\n";
+						}
+					}
+					else {
+						if (md5_file(ROOT . DS . "update_files". DS . $line_of_text) == md5_file(ROOT . DS . $line_of_text)) {
+							echo " and file is unchanged\n";
+						}
+						else {
+							echo " and DIFFERENT\n";
+							echoc("DIFFERENT\n", 'RED');
+						}
+
+					}
+				}
+			}
+			else echo "...missing\n";
+
+			$count++;
+		}
+
+	}
+
+	fclose($file_handle);
+}

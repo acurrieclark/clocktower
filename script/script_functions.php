@@ -85,7 +85,7 @@ function add_model_to_database($model_name) {
 		}
 
 		echoc("$details_string\n");
-		
+
 
 	} catch (Exception $e) {
 		echoc($e->getMessage(), 'RED');
@@ -137,7 +137,7 @@ function add_model_to_database($model_name) {
 	}
 
 	if ($columns_altered < 1) {
-		echoc("No columns to update\n", 'LIGHT_BLUE');	
+		echoc("No columns to update\n", 'LIGHT_BLUE');
 	}
 
 	foreach ($old_model_fields as $column_to_delete)
@@ -195,5 +195,143 @@ function add_column_if_not_exists($table, $column, $column_attr = "VARCHAR( 255 
 		    else return false;
 }
 
+function md5_dir($dir)
+{
+    if (!is_dir($dir))
+    {
+        return false;
+    }
+
+    $filemd5s = array();
+    $d = dir($dir);
+
+    while (false !== ($entry = $d->read()))
+    {
+        if ($entry != '.' && $entry != '..')
+        {
+             if (is_dir($dir.'/'.$entry))
+             {
+                 $filemd5s[] = md5_dir($dir.'/'.$entry);
+             }
+             else
+             {
+                 $filemd5s[] = md5_file($dir.'/'.$entry);
+             }
+         }
+    }
+    $d->close();
+    return md5(implode('', $filemd5s));
+}
+
+// detects differences between two folders and returns a list of the different files
+
+function dir_diffs($dir1, $dir2) {
+
+	// dir1 should be old, dir2 new
+
+    if (!is_dir($dir1) || !is_dir($dir2))
+    {
+        return "Not a folder\n";
+    }
+
+    $differences = array();
+
+    $d1 = dir($dir1);
+    $d2 = dir($dir2);
+
+    while (false !== ($entry = $d1->read()))
+    {
+        if ($entry != '.' && $entry != '..' && $entry != ".DS_Store")
+        {
+        	if (!file_exists($dir2.'/'.$entry)) {
+            	$differences[] = $dir1.'/'.$entry.echoc(' no longer exists', "RED", true);
+            }
+            else if (is_dir($dir1.'/'.$entry)) {
+            	array_merge($differences, dir_diffs($dir1."/".$entry, $dir2."/".$entry));
+        	}
+            else {
+				if (md5_file($dir1.'/'.$entry) != md5_file($dir2.'/'.$entry)) {
+                	$differences[] = $dir1.'/'.$entry.echoc(' updated', 'MAGENTA', true);
+                }
+            }
+        }
+    }
+    $d1->close();
+
+    while (false !== ($entry = $d2->read()))
+    {
+        if ($entry != '.' && $entry != '..' && $entry != ".DS_Store")
+        {
+            if (!file_exists($dir1.'/'.$entry)) {
+             	$differences[] = $dir1.'/'.$entry." is ".echoc('new', "GREEN", true);
+            }
+        }
+    }
+    $d2->close();
+
+    return $differences;
+
+}
+
+class HZip
+{
+  /**
+   * Add files and sub-directories in a folder to zip file.
+   * @param string $folder
+   * @param ZipArchive $zipFile
+   * @param int $exclusiveLength Number of text to be exclusived from the file path.
+   */
+  private static function folderToZip($folder, &$zipFile, $exclusiveLength) {
+    $handle = opendir($folder);
+    while (false !== $f = readdir($handle)) {
+      if ($f != '.' && $f != '..' && $f != ".DS_Store") {
+        $filePath = "$folder/$f";
+        // Remove prefix from file path before add to zip.
+        $localPath = substr($filePath, $exclusiveLength);
+        if (is_file($filePath)) {
+          $zipFile->addFile($filePath, $localPath);
+        } elseif (is_dir($filePath)) {
+          // Add sub-directory.
+          $zipFile->addEmptyDir($localPath);
+          self::folderToZip($filePath, $zipFile, $exclusiveLength);
+        }
+      }
+    }
+    closedir($handle);
+  }
+
+  /**
+   * Zip a folder (include itself).
+   * Usage:
+   *   HZip::zipDir('/path/to/sourceDir', '/path/to/out.zip');
+   *
+   * @param string $sourcePath Path of directory to be zip.
+   * @param string $outZipPath Path of output zip file.
+   */
+  public static function zipDir($sourcePath, $outZipPath = "")
+  {
+  	echo "Backing up ". $sourcePath."\n";
+  	if ($outZipPath == "") {
+  		$outZipPath = $sourcePath."/backup-".time().".zip";
+  	}
+    $pathInfo = pathInfo($sourcePath);
+    $parentPath = $pathInfo['dirname'];
+    $dirName = $pathInfo['basename'];
+
+    $z = new ZipArchive();
+    $z->open($outZipPath, ZIPARCHIVE::CREATE);
+    $z->addEmptyDir($dirName);
+    self::folderToZip($sourcePath, $z, strlen("$parentPath/"));
+    	// close the archive
+	if ($z->close()) {
+		echo "Archive ". $outZipPath . " created successfully.\n\n";
+		return true;
+	}
+	else {
+		echo "Archive could not be created.\n";
+		return false;
+	}
+  }
+}
 
 ?>

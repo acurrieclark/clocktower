@@ -3,7 +3,6 @@ documentation
 index.php
 library
 LICENSE.md
-public
 public/.htaccess
 public/css/css.php
 public/css/system
