@@ -11,7 +11,7 @@ echo "Clocktower Update Script\n";
 echo "What would you like to do?\n";
 echo "1. Check for an update\n";
 echo "2. Update Clocktower\n";
-echo "3. Backup your root directory\n";
+echo "3. Verbose comparison of files\n";
 echo '(1, 2 or 3): ';
 
 $invalid = true;
@@ -36,6 +36,7 @@ while ($invalid == true) {
 		$invalid = false;
 	}
 	else if ($response == '3') {
+		compare_files();
 		$invalid = false;
 	}
 	else if ($response == "exit" || $response == "Exit") {
@@ -155,6 +156,15 @@ function update_files() {
 }
 
 function compare_files() {
+	// create a temporary folder for th latest version
+	if (!@mkdir( ROOT.'/update_files', 0777, true)) {
+			echo "Could not write to the root folder. Please check permissions.\n";
+		exit;
+	}
+	echo "Checking for Update\n";
+	echo "Downloading latest version...\n";
+	shell_exec('git clone https://github.com/acurrieclark/clocktower.git '.ROOT.'/update_files');
+
 	$file_handle = fopen(ROOT."/update_files/script/update_list", "rb");
 
 	$count = 1;
@@ -209,4 +219,5 @@ function compare_files() {
 	}
 
 	fclose($file_handle);
+	delete_directory( ROOT.'/update_files');
 }
