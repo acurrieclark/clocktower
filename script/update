@@ -141,9 +141,11 @@ function update_files() {
 
 	if ($line_of_text != "")
 		{
-			echo $count. ": Copying - '$line_of_text'\n";
+			echo $count. ": Copying - '$line_of_text'";
 
-			recurse_copy(ROOT . DS . DS . "update_files". $line_of_text, ROOT . DS . $line_of_text);
+			if (recurse_copy(ROOT . DS . "update_files".DS. $line_of_text, ROOT . DS . $line_of_text))
+				echo " - completed\n";
+			else echo " - failed\n";
 
 			$count++;
 		}

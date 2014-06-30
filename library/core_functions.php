@@ -447,10 +447,13 @@ function recurse_copy($src,$dst, $noisy = false) {
 	        }
     }
     closedir($dir);
-
+    return true;
 	}
 
-	else copy ($src, $dst);
+	else if (@copy ($src, $dst)) {
+		return true;
+	}
+	else return false;
 
 
 }
