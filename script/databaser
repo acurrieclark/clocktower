@@ -55,6 +55,27 @@ else {
 
 }
 
+// add sessions table
+
+	$db = db::getInstance();
+
+	$table_query = 		"CREATE TABLE IF NOT EXISTS `sessions` (
+  `id` char(32) CHARACTER SET latin1 NOT NULL,
+  `data` longtext CHARACTER SET latin1 NOT NULL,
+  `last_accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+	try {
+		echo "Checking sessions table\n";
+
+		$db->exec($table_query);
+
+		}
+		catch (Exception $e) {
+		echoc($e->getMessage(), 'RED');
+		echo "\n";
+	}
+
 
 
 ?>
