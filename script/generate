@@ -8,30 +8,13 @@ define('DS', "/");
 require(ROOT."/script/script_includes.php");
 
 if (isset($argv[1]) && isset($argv[2])) {
-	if ($argv[1] == 'controller') {
 
-		$controller_name = $argv[2];
-		$model_name = inflection::singularize($controller_name);
-		$capital_controller_name = ucfirst($controller_name);
-		$capital_model_name = ucfirst($model_name);
+	$controller_name = $argv[2];
+	$model_name = inflection::singularize($controller_name);
+	$capital_controller_name = ucfirst($controller_name);
+	$capital_model_name = ucfirst($model_name);
 
-		// generate controller
-
-		if (!file_exists(ROOT."/application/controllers/".$controller_name.".php")) {
-			$controller_template = file_get_contents(ROOT."/library/templates/controller.php");
-
-			$controller_template = str_replace("<%CONTROLLER_NAME%>", $controller_name, $controller_template);
-			$controller_template = str_replace("<%CAPITAL_CONTROLLER_NAME%>", $capital_controller_name, $controller_template);
-			$controller_template = str_replace("<%MODEL_NAME%>", $model_name, $controller_template);
-			$controller_template = str_replace("<%CAPITAL_MODEL_NAME%>", $capital_model_name, $controller_template);
-
-			file_put_contents(ROOT."/application/controllers/".$controller_name.".php", $controller_template);
-
-			echo "'$capital_controller_name' controller created\n";
-		}
-		else {
-			echo "The controller '$controller_name' already exists\n";
-		}
+	if ($argv[1] == "model" || $argv[1] == "controller") {
 
 		// generate model
 
@@ -60,6 +43,28 @@ if (isset($argv[1]) && isset($argv[2])) {
 		}
 		else {
 			echo "The structure '$model_name' already exists\n";
+		}
+	}
+
+
+	if ($argv[1] == 'controller') {
+
+		// generate controller
+
+		if (!file_exists(ROOT."/application/controllers/".$controller_name.".php")) {
+			$controller_template = file_get_contents(ROOT."/library/templates/controller.php");
+
+			$controller_template = str_replace("<%CONTROLLER_NAME%>", $controller_name, $controller_template);
+			$controller_template = str_replace("<%CAPITAL_CONTROLLER_NAME%>", $capital_controller_name, $controller_template);
+			$controller_template = str_replace("<%MODEL_NAME%>", $model_name, $controller_template);
+			$controller_template = str_replace("<%CAPITAL_MODEL_NAME%>", $capital_model_name, $controller_template);
+
+			file_put_contents(ROOT."/application/controllers/".$controller_name.".php", $controller_template);
+
+			echo "'$capital_controller_name' controller created\n";
+		}
+		else {
+			echo "The controller '$controller_name' already exists\n";
 		}
 
 		// generate helper
