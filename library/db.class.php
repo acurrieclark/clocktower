@@ -32,9 +32,20 @@ class db{
 	{
 		if (!self::$instance)
 		{
-			self::$instance = new PDO("mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME, DB_USER, DB_PASSWORD);
-			self::$instance-> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			logger::Database('Connected to '.DB_NAME.'@'.DB_HOST);
+			try {
+				if (!DB_NAME) {
+			        throw new PDOException('No database name');
+			    }
+				self::$instance = new PDO("mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME, DB_USER, DB_PASSWORD,
+	                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+				logger::Database('Connected to '.DB_NAME.'@'.DB_HOST);
+			}
+			catch(PDOException $ex) {
+				logger::Database("Could not connect");
+				logger::Database($ex->getMessage());
+				logger::write();
+				die ("Invalid database - please check the log file for details");
+			}
 		}
 		return self::$instance;
 	}

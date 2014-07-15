@@ -12,7 +12,9 @@ class baseController
 
 	function __construct() {
 
-		session::start();
+		if (db::getInstance()) {
+			session::start();
+		}
 
 		$this->template = new template;
 
