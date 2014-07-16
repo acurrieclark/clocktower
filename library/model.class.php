@@ -587,9 +587,9 @@ abstract class model
 
 	}
 
-	public static function find_by_id($id) {
+	public static function find_by_id($id, $options = array()) {
 		$class = get_called_class();
-		return $class::find(array('where' => array('id' => $id)));
+		return $class::find(array_merge($options, array('where' => array('id' => $id))));
 	}
 
 	public static function find($options = array('where' => array(), 'order' => array())) {
