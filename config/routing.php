@@ -2,6 +2,12 @@
 
 $routing = array(
 
+	// *** examples ***
+	// '/^login/' => 'members/login',
+	// '/^register/' => 'members/register',
+	// '/^logout/' => 'members/logout',
+	// '/^news\/([^show].*?)/' => 'news/show/\1',
+	// '/^events\/([0-9].*?)/' => 'events/show/\1'
 );
 
 /**

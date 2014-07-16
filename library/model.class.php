@@ -615,7 +615,8 @@ abstract class model
 		if (empty($result))
 			return;
 		$model_instance = new $model($result);
-		$model_instance->fetch_associated_models();
+		if (!$options['no_containers'])
+			$model_instance->fetch_associated_models();
 		logger::Database("1 $model with $field=$value fetched.");
 		$time_finish = microtime(true);
 		$time = $time_finish - $time_start;
@@ -671,7 +672,8 @@ abstract class model
 			$count = 0;
 			foreach ($stmt->fetchAll() as $object){
 				$objects_array[$object['id']] = new $class($object);
-				$objects_array[$object['id']]->fetch_associated_models();
+				if (!$options['no_containers'])
+					$objects_array[$object['id']]->fetch_associated_models();
 				$count++;
 			}
 			$models_name = Inflection::pluralize_if($count, $class);

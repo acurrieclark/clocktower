@@ -18,6 +18,7 @@ $structure = array(
 
 	array('Start Date', 'datepicker'),
 	array('Start Time', 'timepicker', 'style' => 'input-mini', 'not_required' => true),
+	array('Performances', 'container', 'many' => true, 'short_name' => "performances", "not_required" => true)
 );
 
 ?>
