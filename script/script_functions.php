@@ -247,7 +247,7 @@ function dir_diffs($dir1, $dir2) {
             	$differences[] = $dir1.'/'.$entry.echoc(' no longer exists', "RED", true);
             }
             else if (is_dir($dir1.'/'.$entry)) {
-            	array_merge($differences, dir_diffs($dir1."/".$entry, $dir2."/".$entry));
+            	$differences = array_merge($differences, dir_diffs($dir1."/".$entry, $dir2."/".$entry));
         	}
             else {
 				if (md5_file($dir1.'/'.$entry) != md5_file($dir2.'/'.$entry)) {
