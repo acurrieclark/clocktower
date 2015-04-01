@@ -18,6 +18,10 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 		$this-><%CONTROLLER_NAME%> = <%MODEL_NAME%>::find_all();
 	}
 
+	function _show() {
+		$this-><%MODEL_NAME%> = <%MODEL_NAME%>::find_by_id($this->id);
+	}
+
 	function _new() {
 		$this-><%MODEL_NAME%> = new <%MODEL_NAME%>($this->posted);
 	}

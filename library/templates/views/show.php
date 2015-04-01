@@ -11,3 +11,5 @@
 	$this-><%MODEL_NAME%>->show_simple();
 
 ?>
+
+</div>
