@@ -41,6 +41,10 @@ else {
 			return;
 		}
 
+	}
+
+	foreach ($models as $model) {
+
 		$filename_split = explode('/', $model);
 		$model_name = str_replace(".php", "", $filename_split[sizeof($filename_split)-1]);
 
