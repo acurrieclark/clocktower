@@ -55,9 +55,7 @@ function add_model_to_database($model_name) {
 
 	$columns_altered = 0;
 
-	$table_query = "CREATE TABLE IF NOT EXISTS $table_name(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id)); ALTER TABLE $table_name CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
 	try {
-		$db->exec($table_query);
 		echoc("$table_name\n", 'MAGENTA');
 		$q = $db->prepare("DESCRIBE $table_name");
 		$q->execute();

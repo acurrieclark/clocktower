@@ -8,6 +8,12 @@ include_javascript('index');
 
 ?>
 
+<a class="btn btn-success" href="<?= address('<%CONTROLLER_NAME%>', 'new', $<%MODEL_NAME%>->id) ?>">New <%CAPITAL_MODEL_NAME%></a>
+
+<?php if (empty($this-><%CONTROLLER_NAME%>)): ?>
+	<h3>No <%CAPITAL_CONTROLLER_NAME%> to display</h3>
+<?php else: ?>
+
 <div class="table-responsive">
 	<table class="table table-condensed">
 
@@ -44,3 +50,4 @@ foreach ($this-><%CONTROLLER_NAME%> as $<%MODEL_NAME%>) {
 
 </div>
 
+<?php endif ?>

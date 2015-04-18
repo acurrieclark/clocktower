@@ -43,14 +43,32 @@ else {
 
 		$filename_split = explode('/', $model);
 		$model_name = str_replace(".php", "", $filename_split[sizeof($filename_split)-1]);
+		$table_name = Inflection::pluralize($model_name);
+
+		$db = db::getInstance();
+
+		$table_query = "CREATE TABLE IF NOT EXISTS $table_name(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id)); ALTER TABLE $table_name CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
 
 		try {
-			add_model_to_database($model_name);
+			$db->exec($table_query);
 		} catch (Exception $e) {
+			echo "Could not create $table_name\n";
 			echoc($e->getMessage()."\n", RED);
 			return;
 		}
 
+	}
+
+	foreach ($models as $model) {
+		$filename_split = explode('/', $model);
+		$model_name = str_replace(".php", "", $filename_split[sizeof($filename_split)-1]);
+		try {
+			add_model_to_database($model_name);
+		} catch (Exception $e) {
+			echo "Could add model $table_name to database\n";
+			echoc($e->getMessage()."\n", RED);
+			return;
+		}
 	}
 
 }

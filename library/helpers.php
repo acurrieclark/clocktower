@@ -276,7 +276,7 @@ if ($flash->message) {?>
 	</div>
 <?php } ?>
 <?php if ($flash->error) {?>
-	<div class="alert alert-error alert-dismissable">
+	<div class="alert alert-danger alert-dismissable">
 	 	<button class="close" data-dismiss="alert">×</button>
 		<?php echo $flash->error; ?>
 	</div>
