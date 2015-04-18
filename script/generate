@@ -9,8 +9,8 @@ require(ROOT."/script/script_includes.php");
 
 if (isset($argv[1]) && isset($argv[2])) {
 
-	$controller_name = $argv[2];
-	$model_name = inflection::singularize($controller_name);
+	$controller_name = string_to_camel($argv[2]);
+	$model_name = inflection::singularize(camel_to_underscore($controller_name));
 	$capital_controller_name = ucfirst($controller_name);
 	$capital_model_name = ucfirst($model_name);
 
@@ -85,12 +85,12 @@ if (isset($argv[1]) && isset($argv[2])) {
 
 		// generate views
 
-		if (!file_exists(ROOT.'/application/views/'.$controller_name)) {
-    		mkdir(ROOT.'/application/views/'.$controller_name, 0777, true);
+		if (!file_exists(ROOT.'/application/views/'.camel_to_underscore($controller_name))) {
+    		mkdir(ROOT.'/application/views/'.camel_to_underscore($controller_name), 0777, true);
     	}
 		foreach (getDirectoryList(ROOT.'/library/templates/views') as $file) {
 
-			if (!file_exists(ROOT."/application/views/".$controller_name."/".$file)) {
+			if (!file_exists(ROOT."/application/views/".camel_to_underscore($controller_name)."/".$file)) {
 
 				$data = file_get_contents(ROOT.'/library/templates/views/'.$file);
 				$data = str_replace("<%CONTROLLER_NAME%>", $controller_name, $data);
@@ -98,13 +98,13 @@ if (isset($argv[1]) && isset($argv[2])) {
 				$data = str_replace("<%MODEL_NAME%>", $model_name, $data);
 				$data = str_replace("<%CAPITAL_MODEL_NAME%>", $capital_model_name, $data);
 
-				file_put_contents(ROOT."/application/views/".$controller_name."/".$file, $data);
+				file_put_contents(ROOT."/application/views/".camel_to_underscore($controller_name)."/".$file, $data);
 
-				echo "'$capital_controller_name' $file view created\n";
+				echo "'".camel_to_underscore($controller_name)."' $file view created\n";
 
 			}
 			else {
-				echo "The helper '$controller_name' $file view exists\n";
+				echo "The helper '".camel_to_underscore($controller_name)."' $file view exists\n";
 			}
 
 

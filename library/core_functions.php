@@ -239,6 +239,27 @@ function populate($from, &$to, $replace = true)
 
 }
 
+function string_to_camel($text, array $noStrip = array())
+{
+        // non-alpha and non-numeric characters become spaces
+        $str = preg_replace('/[^a-z0-9' . implode("", $noStrip) . ']+/i', ' ', $text);
+        $str = trim($str);
+        // uppercase the first character of each word
+        $str = ucwords($str);
+        $str = str_replace(" ", "", $str);
+        $str = lcfirst($str);
+
+        return $str;
+}
+
+function string_to_underscore($text) {
+	return strtolower((str_replace(" ", "_", $text)));
+}
+
+function camel_to_underscore($text) {
+	return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', trim($text)));
+}
+
 function underscore_to_camel($text) {
 	$array = explode('_', $text);
 	$count = 0;
