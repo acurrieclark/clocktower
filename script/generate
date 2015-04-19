@@ -22,8 +22,11 @@ if (isset($argv[1]) && isset($argv[2])) {
 		if (!file_exists(ROOT."/application/models/".$model_name.".php")) {
 			$model_template = file_get_contents(ROOT."/library/templates/model.php");
 
+			$model_template = str_replace("<%CONTROLLER_NAME%>", $controller_name, $model_template);
+			$model_template = str_replace("<%CAPITAL_CONTROLLER_NAME%>", $capital_controller_name, $model_template);
 			$model_template = str_replace("<%MODEL_NAME%>", $model_name, $model_template);
 			$model_template = str_replace("<%CAPITAL_MODEL_NAME%>", $capital_model_name, $model_template);
+			$model_template = str_replace("<%CONTROLLER_UNDERSCORE%>", $controller_underscore, $model_template);
 
 			file_put_contents(ROOT."/application/models/".$model_name.".php", $model_template);
 
@@ -59,6 +62,7 @@ if (isset($argv[1]) && isset($argv[2])) {
 			$controller_template = str_replace("<%CAPITAL_CONTROLLER_NAME%>", $capital_controller_name, $controller_template);
 			$controller_template = str_replace("<%MODEL_NAME%>", $model_name, $controller_template);
 			$controller_template = str_replace("<%CAPITAL_MODEL_NAME%>", $capital_model_name, $controller_template);
+			$controller_template = str_replace("<%CONTROLLER_UNDERSCORE%>", $controller_underscore, $controller_template);
 
 			file_put_contents(ROOT."/application/controllers/".$controller_name.".php", $controller_template);
 
@@ -75,6 +79,9 @@ if (isset($argv[1]) && isset($argv[2])) {
 
 			$helper_template = str_replace("<%CONTROLLER_NAME%>", $controller_name, $helper_template);
 			$helper_template = str_replace("<%CAPITAL_CONTROLLER_NAME%>", $capital_controller_name, $helper_template);
+			$helper_template = str_replace("<%MODEL_NAME%>", $model_name, $helper_template);
+			$helper_template = str_replace("<%CAPITAL_MODEL_NAME%>", $capital_model_name, $helper_template);
+			$helper_template = str_replace("<%CONTROLLER_UNDERSCORE%>", $controller_underscore, $helper_template);
 
 			file_put_contents(ROOT."/application/helpers/".$controller_name.".php", $helper_template);
 
