@@ -11,8 +11,8 @@ if (isset($argv[1]) && isset($argv[2])) {
 
 	$controller_name = string_to_camel($argv[2]);
 	$model_name = inflection::singularize(camel_to_underscore($controller_name));
-	$capital_controller_name = ucfirst($controller_name);
-	$capital_model_name = ucfirst($model_name);
+	$capital_controller_name = camel_to_string($controller_name);
+	$capital_model_name = underscore_to_string($model_name);
 
 	if ($argv[1] == "model" || $argv[1] == "controller") {
 

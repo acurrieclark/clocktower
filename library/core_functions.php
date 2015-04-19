@@ -272,6 +272,14 @@ function underscore_to_camel($text) {
 	return $text;
 }
 
+function camel_to_string($text) {
+	return ucfirst(preg_replace('/([a-z])([A-Z])/', '$1 $2', trim($text)));
+}
+
+function underscore_to_string($text) {
+	return ucwords((str_replace("_", " ", $text)));
+}
+
 ############### Action Functions ##############
 
 // Set the action to render
