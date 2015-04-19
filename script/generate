@@ -13,6 +13,7 @@ if (isset($argv[1]) && isset($argv[2])) {
 	$model_name = inflection::singularize(camel_to_underscore($controller_name));
 	$capital_controller_name = camel_to_string($controller_name);
 	$capital_model_name = underscore_to_string($model_name);
+	$controller_underscore = camel_to_underscore($controller_name);
 
 	if ($argv[1] == "model" || $argv[1] == "controller") {
 
@@ -85,26 +86,27 @@ if (isset($argv[1]) && isset($argv[2])) {
 
 		// generate views
 
-		if (!file_exists(ROOT.'/application/views/'.camel_to_underscore($controller_name))) {
-    		mkdir(ROOT.'/application/views/'.camel_to_underscore($controller_name), 0777, true);
+		if (!file_exists(ROOT.'/application/views/'.$controller_underscore)) {
+    		mkdir(ROOT.'/application/views/'.$controller_underscore, 0777, true);
     	}
 		foreach (getDirectoryList(ROOT.'/library/templates/views') as $file) {
 
-			if (!file_exists(ROOT."/application/views/".camel_to_underscore($controller_name)."/".$file)) {
+			if (!file_exists(ROOT."/application/views/".$controller_underscore."/".$file)) {
 
 				$data = file_get_contents(ROOT.'/library/templates/views/'.$file);
 				$data = str_replace("<%CONTROLLER_NAME%>", $controller_name, $data);
 				$data = str_replace("<%CAPITAL_CONTROLLER_NAME%>", $capital_controller_name, $data);
 				$data = str_replace("<%MODEL_NAME%>", $model_name, $data);
 				$data = str_replace("<%CAPITAL_MODEL_NAME%>", $capital_model_name, $data);
+				$data = str_replace("<%CONTROLLER_UNDERSCORE%>", $controller_underscore, $data);
 
-				file_put_contents(ROOT."/application/views/".camel_to_underscore($controller_name)."/".$file, $data);
+				file_put_contents(ROOT."/application/views/".$controller_underscore."/".$file, $data);
 
-				echo "'".camel_to_underscore($controller_name)."' $file view created\n";
+				echo "'".$controller_underscore."' $file view created\n";
 
 			}
 			else {
-				echo "The helper '".camel_to_underscore($controller_name)."' $file view exists\n";
+				echo "The '".$controller_underscore."' $file view exists\n";
 			}
 
 

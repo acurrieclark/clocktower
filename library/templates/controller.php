@@ -15,7 +15,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 	}
 
 	function _index() {
-		$this-><%CONTROLLER_NAME%> = <%MODEL_NAME%>::find_all();
+		$this-><%CONTROLLER_UNDERSCORE%> = <%MODEL_NAME%>::find_all();
 	}
 
 	function _show() {

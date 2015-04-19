@@ -10,11 +10,11 @@ $(function () {
 
    $(function() {
 
- <?php foreach ($app-><%CONTROLLER_NAME%> as $<%MODEL_NAME%>): ?>
+ <?php foreach ($app-><%CONTROLLER_UNDERSCORE%> as $<%MODEL_NAME%>): ?>
 
 
        $("#delete_button_<?= $<%MODEL_NAME%>->id ?>").click(function() {
-       add_delete_row(<?= $<%MODEL_NAME%>->id ?>, "<?= address('<%CONTROLLER_NAME%>', 'delete', $<%MODEL_NAME%>->id) ?>");
+       add_delete_row(<?= $<%MODEL_NAME%>->id ?>, "<?= address('<%CONTROLLER_LINK_NAME%>', 'delete', $<%MODEL_NAME%>->id) ?>");
        });
 
  <?php endforeach ?>

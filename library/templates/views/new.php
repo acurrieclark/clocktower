@@ -15,5 +15,5 @@
 
 	messages();
 
-	render_partial('form', array('target' => ABSOLUTE.'<%CONTROLLER_NAME%>/new', 'button' => 'Save'	));
+	render_partial('form', array('target' => ABSOLUTE.'<%CONTROLLER_UNDERSCORE%>/new', 'button' => 'Save'	));
 
