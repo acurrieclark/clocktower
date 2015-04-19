@@ -29,7 +29,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 	function _create() {
 		$this-><%MODEL_NAME%> = new <%MODEL_NAME%>($this->posted);
 		if ($this-><%MODEL_NAME%>->save()) {
-			flash('"'.$this->form->Title.'"<%MODEL_NAME%> created.');
+			flash('<%MODEL_NAME%> created.');
 			redirect_to('<%CONTROLLER_UNDERSCORE%>');
 		}
 		else {
@@ -45,7 +45,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 	function _update() {
 		$this-><%MODEL_NAME%> = new <%MODEL_NAME%>(array_merge(array('id' => $this->id), $this->posted));
 		if ($this-><%MODEL_NAME%>->update()) {
-			flash('"'.$this->form->Title.'" <%MODEL_NAME%> updated.');
+			flash('<%MODEL_NAME%> updated.');
 			redirect_to('<%CONTROLLER_UNDERSCORE%>');
 		}
 		else {
@@ -56,7 +56,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 
 		function _delete() {
 			$this-><%MODEL_NAME%> = <%MODEL_NAME%>::find_by_id($this->id);
-		if ($this->article->destroy()) {
+		if ($this-><%MODEL_NAME%>->destroy()) {
 			flash('<%CAPITAL_MODEL_NAME%> '. $this->id .' deleted');
 			redirect_to('back');
 		}
