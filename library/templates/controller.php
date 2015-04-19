@@ -30,7 +30,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 		$this-><%MODEL_NAME%> = new <%MODEL_NAME%>($this->posted);
 		if ($this-><%MODEL_NAME%>->save()) {
 			flash('"'.$this->form->Title.'"<%MODEL_NAME%> created.');
-			redirect_to('<%CONTROLLER_NAME%>');
+			redirect_to('<%CONTROLLER_UNDERSCORE%>');
 		}
 		else {
 			error('There appears to be an error with the <%MODEL_NAME%>.');
@@ -46,7 +46,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 		$this-><%MODEL_NAME%> = new <%MODEL_NAME%>(array_merge(array('id' => $this->id), $this->posted));
 		if ($this-><%MODEL_NAME%>->update()) {
 			flash('"'.$this->form->Title.'" <%MODEL_NAME%> updated.');
-			redirect_to('<%CONTROLLER_NAME%>');
+			redirect_to('<%CONTROLLER_UNDERSCORE%>');
 		}
 		else {
 			error('There appears to be an error with the <%MODEL_NAME%>.');
