@@ -14,7 +14,7 @@ $(function () {
 
 
        $("#delete_button_<?= $<%MODEL_NAME%>->id ?>").click(function() {
-       add_delete_row(<?= $<%MODEL_NAME%>->id ?>, "<?= address('<%CONTROLLER_LINK_NAME%>', 'delete', $<%MODEL_NAME%>->id) ?>");
+       add_delete_row(<?= $<%MODEL_NAME%>->id ?>, "<?= address('<%CONTROLLER_UNDERSCORE%>', 'delete', $<%MODEL_NAME%>->id) ?>");
        });
 
  <?php endforeach ?>
