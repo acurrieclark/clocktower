@@ -310,14 +310,14 @@ abstract class model
 		if (!empty($to_be_shown)) {
 			foreach ($to_be_shown as $element_name) {
 				if ($this->$element_name->should_be_shown()) {
-					$returnable .= '<td>'.show_safely($this->$element_name->value).'</td>';
+					$returnable .= '<td>'.show_safely($this->$element_name).'</td>';
 				}
 			}
 		}
 		else {
 			foreach ($this as $element) {
 				if ($element->should_be_shown()) {
-					$returnable .= '<td>'.show_safely($element->value).'</td>';
+					$returnable .= '<td>'.show_safely($element).'</td>';
 				}
 			}
 		}
