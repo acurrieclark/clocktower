@@ -67,11 +67,11 @@ class mailer
 		else {
 			$admin_subject_prefix = "DEVELOPMENT MODE - ";
 		}
-		
 
-		$check_message_to_send = Swift_Message::newInstance($admin_subject_prefix.'RA Email - '.$subject)
+
+		$check_message_to_send = Swift_Message::newInstance($admin_subject_prefix.$subject)
 			  ->setFrom($from)
-			  ->setTo(array('acurrieclark@gmail.com', 'OR@davericks.com'))
+			  ->setTo(array(DEVELOPER_EMAIL_ADDRESS))
 			  ->setBody($html, 'text/html')
 			  ->addPart($plain, 'text/plain');
 
@@ -92,7 +92,7 @@ class mailer
 	static function queue($to, $from, $subject, $plain, $html = '') {
 
 		if (DEVELOPMENT_ENVIRONMENT == TRUE) {
-			$to = "acurrieclark@gmail.com";
+			$to = DEVELOPER_EMAIL_ADDRESS;
 		}
 
 		$mail_properties['mail_to'] = $to;

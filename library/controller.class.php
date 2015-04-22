@@ -280,11 +280,13 @@ class baseController
 		else {
 
 			add_stylesheet('system/bootstrap.min');
+			add_stylesheet('system/system');
 			add_stylesheet('main');
 
 			add_javascript('system/jquery-1.11.0.min');
         	add_javascript('system/modernizr-2.6.2-respond-1.1.0.min');
         	add_javascript('main');
+			add_javascript('system/system');
         	add_javascript('system/bootstrap.min');
 
 			try {

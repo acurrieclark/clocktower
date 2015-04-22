@@ -1,0 +1,10 @@
+/* system styling file */
+
+.page-header .right-button-bar {
+	margin-top: -45px;
+}
+
+.right-button-bar {
+	float: right;
+	margin-top: -40px;
+}

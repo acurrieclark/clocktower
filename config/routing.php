@@ -3,9 +3,9 @@
 $routing = array(
 
 	// *** examples ***
-	// '/^login/' => 'members/login',
-	// '/^register/' => 'members/register',
-	// '/^logout/' => 'members/logout',
+	 '/^login/' => 'users/login',
+	 '/^register/' => 'users/register',
+	 '/^logout/' => 'users/logout',
 	// '/^news\/([^show].*?)/' => 'news/show/\1',
 	// '/^events\/([0-9].*?)/' => 'events/show/\1'
 );
@@ -20,5 +20,9 @@ $routing = array(
  **/
 
 $post_routing = array(
-	'all' => array("new" => "create", 'edit' => "update")
+	'all' => array("new" => "create", 'edit' => "update"),
+	'users' => array("register" => "create-registration",
+					'login' => "create_login",
+					'password-reset' => 'reset-password',
+					"new-password" => "save-new-password")
 );

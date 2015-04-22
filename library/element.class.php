@@ -159,14 +159,12 @@ class element
 
 	function show_simply() {
 
-		$returnable = '<div class="row">';
-		$returnable .= '<div class="col-sm-4 show_simply_name">
+		$returnable = '<dt>
 						'.$this->name.'
-					</div>
-					<div class="col-sm-8 show_simply_value">
+					</dt>
+					<dd>
 						'.$this->show().'
-					</div>
-		</div>';
+					</dd>';
 
 		return $returnable;
 
@@ -193,7 +191,7 @@ class password extends string {
 
 	function input() {
 		?>
-		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="password" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="password <?php echo $this->short_name;?>"  placeholder="<?= $this->name ?>" />
+		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="password" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control password <?php echo $this->short_name;?>"  placeholder="<?= $this->name ?>" />
 		<?php
 		$this->show_error_message();
 	}
@@ -581,7 +579,7 @@ class radio extends element
 	}
 
 	function opening_div_class() {
-		return "";
+		return "form-group";
 	}
 
 	function label() {
@@ -941,7 +939,8 @@ class date extends element
 	function input() {
 
 		?>
-		<div class="date">
+		<div class="form-inline">
+			<div class="date">
 
 		<?php
 
@@ -950,6 +949,8 @@ class date extends element
 		$this->year_select();
 
 		?>
+
+			</div>
 		</div>
 		<?php
 		$this->show_error_message();
@@ -957,7 +958,7 @@ class date extends element
 
 	function day_select() {
 		$days = range (01, 31);
-		echo "<select name='".$this->input_name."[day]' class=\"day_select\">";
+		echo "<select name='".$this->input_name."[day]' class=\"day_select form-control\">";
 			echo '<option value="none">Day</option>';
 		foreach ($days as $day) {
 			if ($day == $this->value['day']) {
@@ -974,7 +975,7 @@ class date extends element
 
 	function month_select() {
 		$months = array('January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December');
-		echo "<select name='".$this->input_name."[month]' class=\"month_select\">";
+		echo "<select name='".$this->input_name."[month]' class=\"month_select form-control\">";
 		echo '<option value="none">Month</option>';
 		$month_count = 1;
 		foreach ($months as $month) {
@@ -993,7 +994,7 @@ class date extends element
 
 	function year_select() {
 
-		echo "<select name='".$this->input_name."[year]' class=\"year_select\">";
+		echo "<select name='".$this->input_name."[year]' class=\"year_select form-control\">";
 		echo '<option value="none">Year</option>';
 			for ($year = (date("Y") + $this->upper_year_limit); $year >= (date("Y") + $this->lower_year_limit); $year--) {
 			if ($year == $this->value['year']) {
@@ -1454,6 +1455,10 @@ class timestamp extends element
 	}
 
 	function input() {}
+
+	function show($format = 'jS F Y') {
+		return date($format, strtotime($this->value));
+	}
 
 }
 

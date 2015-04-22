@@ -10,7 +10,12 @@ $structure = array(
 			array("remember_expiry", "timestamp"),
 			array("activation_code", "id_code", 'not_required' => true),
 			array("password_reset_code", "id_code", 'not_required' => true),
-			array("Status", "radio", array("Active", "Pending", "Unverified", "Deactivated"), 'short_name' => 'status')
+			array("Status", "radio", array("Active", "Pending", "Unverified", "Deactivated"), 'short_name' => 'status'),
+			array("Reason for Deactivation", 'string',
+				'short_name' => 'reason',
+				'show' => array('status' => 'Deactivated'),
+				'hide' => array('status' => 'Active || Pending || Unverified'),
+				'not_required' => true)
 		);
 
 

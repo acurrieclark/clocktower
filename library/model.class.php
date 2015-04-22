@@ -328,7 +328,7 @@ abstract class model
 
 	function show_simple($to_be_shown = array(), $show_empty = false) {
 
-		$returnable = '';
+		$returnable = '<dl class="dl-horizontal">';
 
 		if (!empty($to_be_shown)) {
 			foreach ($to_be_shown as $element_name) {
@@ -347,6 +347,7 @@ abstract class model
 				}
 			}
 		}
+		$returnable .= "</dl>";
 		return $returnable;
 	}
 

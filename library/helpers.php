@@ -1,9 +1,10 @@
 <?php
 
-function icon($name, $white=false) {
-	if ($white)
-		$name .= " icon-white";
-	return "<i class=\"icon-$name\"></i>";
+function icon($name, $colour="") {
+	if ($colour)
+		$style = "style=\"color: $colour\"";
+	else $style = "";
+	return "<span $style class=\"glyphicon glyphicon-$name\"></span>";
 }
 
 function label($text, $type='') {
@@ -15,12 +16,6 @@ function label($text, $type='') {
 function include_security() {
 	model::setup_security();
 	model::form_security();
-}
-
-function include_zocial() {
-
-	add_stylesheet(ABSOLUTE.'vendor/zocial/zocial.css');
-
 }
 
 function include_redactor() {
