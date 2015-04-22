@@ -538,7 +538,7 @@ class usersController extends applicationController
 			redirect_to();
 		}
 		else {
-			$this->message = new message($this->posted);
+			$this->message = new user_message($this->posted);
 			if ($this->message->validate()) {
 				$this->to = user::find_by_id($this->message->recipient_id->value);
 				$html_email = $this->html_email('email', 'member_message');

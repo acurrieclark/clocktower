@@ -10,13 +10,13 @@ application/helpers/*
 !application/helpers/users.php
 !application/helpers/application.php
 application/models/*
-!application/models/message.php
+!application/models/user_message.php
 !application/models/user.php
 application/static/*
 !application/static/index.php
 !application/static/phpinfo.php
 application/structures/*
-!application/structures/message.php
+!application/structures/user_message.php
 !application/structures/user.php
 application/views/*
 !application/views/mailers

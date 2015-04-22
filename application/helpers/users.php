@@ -56,7 +56,7 @@ function send_message_modal($user) {
 	 ?>
 
 	<?php
-	$form = new message(array(
+	$form = new user_message(array(
 		'sender_id' => current_user()->id->value,
 		'Content' => '',
 		'recipient_id' => $user->id->value
