@@ -385,7 +385,6 @@ function debug_call() {
 			 	<tr><td><?= sizeof($backtrace) - $key ?></td><td><?= str_replace(ROOT, '', $entry['file']) ?>: <?= $entry['line'] ?> <?= $entry['class'].$entry['type'].$entry['function'] ?>(<?= json_encode($entry['args']) ?>)</td>
 			 		</tr>
 
-
 		 <?php
 	}
 	 ?>

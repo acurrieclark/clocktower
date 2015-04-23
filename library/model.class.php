@@ -571,6 +571,7 @@ abstract class model
 					throw new Exception("The model appears to contain duplicate short_name keys $duplicate_name", 1);
 				}
 				else{
+					// used for forms where we borrow the element details from the model
 					if (isset($element['model']) && $element['element']) {
 						$element_short_name = $element['element'];
 						if (!isset($inter_models[$element['model']])) {
