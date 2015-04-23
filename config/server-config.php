@@ -4,6 +4,8 @@
 
 define ('DEVELOPMENT_ENVIRONMENT', true);
 
+define(SEND_ALL_MAIL_TO_DEVELOPER, TRUE);
+
 if (isset($_SERVER['HTTP_HOST'])) {
 	define ('ABSOLUTE', str_replace("public/index.php", "", "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']));
 

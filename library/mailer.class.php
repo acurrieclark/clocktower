@@ -54,7 +54,7 @@ class mailer
 
 		$failedRecipients = array();
 
-		if (DEVELOPMENT_ENVIRONMENT != TRUE) {
+		if (!DEVELOPMENT_ENVIRONMENT) {
 			$message_to_send = Swift_Message::newInstance($subject)
 			  ->setFrom($from)
 			  ->setTo($to)
@@ -68,17 +68,19 @@ class mailer
 			$admin_subject_prefix = "DEVELOPMENT MODE - ";
 		}
 
+		if (SEND_ALL_MAIL_TO_DEVELOPER) {
+			$check_message_to_send = Swift_Message::newInstance($admin_subject_prefix.$subject)
+				  ->setFrom($from)
+				  ->setTo(array(DEVELOPER_EMAIL_ADDRESS))
+				  ->setBody($html, 'text/html')
+				  ->addPart($plain, 'text/plain');
 
-		$check_message_to_send = Swift_Message::newInstance($admin_subject_prefix.$subject)
-			  ->setFrom($from)
-			  ->setTo(array(DEVELOPER_EMAIL_ADDRESS))
-			  ->setBody($html, 'text/html')
-			  ->addPart($plain, 'text/plain');
-
-		$mailer->send($check_message_to_send, $failedRecipients);
+			$mailer->send($check_message_to_send, $failedRecipients);
+		}
 
 		if (!in_array($to, $failedRecipients)) {
 			logger::mailer('Message sent to '.$to);
+			if (DEVELOPMENT_ENVIRONMENT) logger::mailer($plain);
 			return true;
 		}
 		else {
