@@ -384,7 +384,8 @@ class usersController extends applicationController
 		unset($this->form->password);
 		unset($this->form->password_confirmation);
 		populate($this->form, $this->user);
-		if ($this->user->update(false)) {
+		if ($this->form->validate()) {
+			$this->user->update(false);
 			flash($this->user->full_name()." - User profile updated");
 			$html_email = $this->html_email('email', 'user_details_updated_email');
 			$text_email = $this->text_email('email', 'user_details_updated_email');

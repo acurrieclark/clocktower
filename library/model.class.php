@@ -573,8 +573,11 @@ abstract class model
 				else{
 					if (isset($element['model']) && $element['element']) {
 						$element_short_name = $element['element'];
-						$inter_model = new $element['model']();
-						$this->$element_short_name = $inter_model->$element['element'];
+						if (!isset($inter_models[$element['model']])) {
+							logger::Form('Loading blank '.$element['model'].' model.');
+							$inter_models[$element['model']] = new $element['model']();
+						}
+						$this->$element_short_name = $inter_models[$element['model']]->$element['element'];
 					}
 					else $this->$element_short_name = new $element_type($element);
 					if ($this->$element_short_name->requires_confirmation()) {

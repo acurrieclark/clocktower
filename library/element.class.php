@@ -238,7 +238,12 @@ class drop extends element {
 	function __construct($element) {
 		parent::__construct($element);
 		if (isset($element[2]['model'])) {
-			$items = $element[2]['model']::find_all(array('where' => $element[2]['where']));
+			if (!empty($element[2]['where']))
+				$where = array('where' => $element[2]['where']);
+			else $where = array();
+
+			$items = $element[2]['model']::find_all();
+
 			if (empty($items)) {
 				$this->list = array();
 			}
@@ -304,6 +309,21 @@ class checkbox extends element {
 
 	function __construct($element) {
 		parent::__construct($element);
+		if (isset($element[2]['model'])) {
+			if (!empty($element[2]['where']))
+				$where = array('where' => $element[2]['where']);
+			else $where = array();
+			$items = $element[2]['model']::find_all();
+			if (empty($items)) {
+				$this->boxes = array();
+			}
+			else {
+				foreach ($items as $key => $item) {
+					$this->boxes[] = (string)$item->$element[2]['field'];
+				}
+			}
+		}
+		else
 		$this->boxes = $element[2];
 	}
 

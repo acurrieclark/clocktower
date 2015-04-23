@@ -359,5 +359,41 @@ function debug($object) {
 	 <?php
 }
 
+function debug_call() {
+
+		$backtrace = debug_backtrace();
+	$first = array_shift($backtrace);
+
+	 ?>
+
+	 <div class="container">
+	 	<div class="row">
+	 		<table class="table table-hover table-condensed">
+		 	<thead>
+		 		<tr>
+		 			<th colspan="2" class="warning">Backtrace Start - <?= $first['file'].' : '.$first['line'] ?></th>
+		 		</tr>
+		 	</thead>
+
+			<tbody>
+	 <?php
+
+	foreach ($backtrace as $key => $entry) {
+		 ?>
+
+
+			 	<tr><td><?= sizeof($backtrace) - $key ?></td><td><?= str_replace(ROOT, '', $entry['file']) ?>: <?= $entry['line'] ?> <?= $entry['class'].$entry['type'].$entry['function'] ?>(<?= json_encode($entry['args']) ?>)</td>
+			 		</tr>
+
+
+		 <?php
+	}
+	 ?>
+			</tbody>
+		</table>
+	 	 	</div>
+	 	 </div>
+	 	 <?php
+}
 
 ?>
