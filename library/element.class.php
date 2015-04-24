@@ -180,7 +180,7 @@ class string extends element
 
 	function input() {
 		?>
-		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="text" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control text <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>"/>
+		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="text" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control text <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
 		<?php
 		$this->show_error_message();
 	}
@@ -191,7 +191,7 @@ class password extends string {
 
 	function input() {
 		?>
-		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="password" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control password <?php echo $this->short_name;?>"  placeholder="<?= $this->name ?>" />
+		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="password" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control password <?php echo $this->short_name;?>"  placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
 		<?php
 		$this->show_error_message();
 	}
@@ -539,7 +539,7 @@ class id extends number {
 
 	function input() {
 		?>
-			<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="hidden" name="<?php echo $this->input_name ?>" value="<?php echo show_safely($this->value); ?>" class="id <?php echo $this->short_name;?>" />
+			<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="hidden" name="<?php echo $this->input_name ?>" value="<?php echo show_safely($this->value); ?>" class="id <?php echo $this->short_name;?>">
 		<?php
 
 	}
@@ -568,7 +568,7 @@ class email extends string {
 
 	function input() {
 		?>
-		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="email" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control email <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>" />
+		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="email" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control email <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
 		<?php
 		$this->show_error_message();
 	}
@@ -674,7 +674,7 @@ class text extends element
 	function input() {
 
 		?>
-	<textarea rows="10" id="<? echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="input-block-level form-control"<?php if ($this->style): ?> style="width: 100%"<?php endif ?>><? echo show_safely($this->value) ?></textarea>
+	<textarea rows="10" id="<? echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="input-block-level form-control"<?php if ($this->style): ?> style="width: 100%"<?php endif ?><?= $this->not_required ? '' : " required" ?>><? echo show_safely($this->value) ?></textarea>
 		<?php
 
 		$this->show_error_message();
@@ -827,7 +827,7 @@ class smallText extends element {
 
 	function input() {
 		?>
-	<textarea rows="3" id="<? echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="<?= ($this->style) ? $this->style : '' ?> form-control" placeholder="<?= $this->name ?>"><? echo show_safely($this->value) ?></textarea>
+	<textarea rows="3" id="<? echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="<?= ($this->style) ? $this->style : '' ?> form-control" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>><? echo show_safely($this->value) ?></textarea>
 		<?php
 
 		$this->show_error_message();
