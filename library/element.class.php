@@ -329,7 +329,7 @@ class checkbox extends element {
 
 	function label() {
 		if ($this->name)
-			return '<label>'.$this->name.'</label>';
+			return '<label>'.$this->name.$this->required_marker().'</label>';
 		else return '';
 	}
 
@@ -440,7 +440,7 @@ class phone_number extends string {
 
 	function validate() {
 		parent::validate();
-		if (!is_valid_phone_number($this->value) && ($this->value != '')) $this->error = not_phone_number;
+		is_valid_phone_number($this->value, $phone_number_error_no, $this->error);
 	}
 
 }

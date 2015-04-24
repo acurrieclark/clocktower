@@ -33,7 +33,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 			redirect_to('<%CONTROLLER_UNDERSCORE%>');
 		}
 		else {
-			error('There appears to be an error with the <%MODEL_NAME%>.');
+			error('There appears to be an error with the <%CAPITAL_MODEL_NAME%>.');
 			render_action('new');
 		}
 	}
@@ -49,7 +49,7 @@ class <%CONTROLLER_NAME%>Controller extends applicationController
 			redirect_to('<%CONTROLLER_UNDERSCORE%>');
 		}
 		else {
-			error('There appears to be an error with the <%MODEL_NAME%>.');
+			error('There appears to be an error with the <%CAPITAL_MODEL_NAME%>.');
 			render_action('edit');
 		}
 	}
