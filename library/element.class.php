@@ -440,7 +440,8 @@ class phone_number extends string {
 
 	function validate() {
 		parent::validate();
-		is_valid_phone_number($this->value, $phone_number_error_no, $this->error);
+		if (($this->value == '' && $this->is_required()) || $this->value)
+			is_valid_phone_number($this->value, $phone_number_error_no, $this->error);
 	}
 
 }
@@ -563,7 +564,7 @@ class email extends string {
 
 	function validate() {
 		parent::validate();
-		if (!is_valid_email($this->value) && !$this->error) $this->error = invalid_email;
+		if (!is_valid_email($this->value) && !$this->error && !$this->not_required) $this->error = invalid_email;
 	}
 
 	function input() {

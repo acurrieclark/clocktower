@@ -28,11 +28,11 @@ $controller_class_name = underscore_to_camel($app_properties['controller'])."Con
 if (class_exists($controller_class_name))
 	$app = new $controller_class_name;
 else if (file_exists(ROOT."/application/static/".$app_properties['controller'].".php")) {
-	$app = new baseController;
+	$app = new applicationController;
 	$app->static_page = true;
 }
 else {
-	$app = new baseController;
+	$app = new applicationController;
 	$app->controller_error = true;
 }
 
