@@ -379,8 +379,7 @@ class usersController extends applicationController
 
 	function _update() {
 		$this->form = new userForm($this->posted);
-		if (isset($this->form->LinkedIn->value))
-			$this->form->LinkedIn->value = add_http($this->form->LinkedIn->value);
+
 		unset($this->form->password);
 		unset($this->form->password_confirmation);
 		populate($this->form, $this->user);

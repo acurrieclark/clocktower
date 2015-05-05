@@ -111,7 +111,7 @@ class session
 
     private function read($sid)
     {
-    	$q = "SELECT `data` FROM `sessions` WHERE `id` = '".$this->dbc->check_input($sid)."' LIMIT 1";
+    	$q = "SELECT `data` FROM `sessions` WHERE `id` = '".dbAbstraction::check_input($sid)."' LIMIT 1";
       	$stmt = $this->dbc->query($q);
 		$stmt->execute();
 		$result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -127,7 +127,7 @@ class session
 
     private function write($sid, $data)
     {
-      	$q = "REPLACE INTO `sessions` (`id`, `data`) VALUES ('".$this->dbc->check_input($sid)."', '".$this->dbc->check_input($data)."')";
+      	$q = "REPLACE INTO `sessions` (`id`, `data`) VALUES ('".dbAbstraction::check_input($sid)."', '".$this->dbc->check_input($data)."')";
       	$stmt = $this->dbc->query($q);
 		return $stmt->execute();
     }
@@ -136,7 +136,7 @@ class session
     {
       	$_SESSION = array();
 
-      	$q = "DELETE FROM `sessions` WHERE `id` = '".$this->dbc->check_input($sid)."'";
+      	$q = "DELETE FROM `sessions` WHERE `id` = '".dbAbstraction::check_input($sid)."'";
       	$stmt = $this->dbc->query($q);
   		return $stmt->execute();
     }

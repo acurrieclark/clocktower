@@ -21,7 +21,7 @@ class mailer
 			  $emails_per_minute , Swift_Plugins_ThrottlerPlugin::MESSAGES_PER_MINUTE
 			));
 
-			$messages = mvaccmail::find_all();
+			$messages = mvaccmail::find_all(['where' => ['Sent' => 'No']]);
 
 			if (!is_array($messages)) $messages = array();
 
@@ -39,10 +39,11 @@ class mailer
 
 				if (!in_array($message->mail_to->value, $failedRecipients)) {
 					logger::mailer('Message sent to '.$message->mail_to->value);
-					$message->destroy();
+					$message->Sent->value = "Yes";
+					$message->update();
 				}
 			}
-
+			echo $status_text;
 			logger::mailer("Sent $numSent messages");
 
 		}

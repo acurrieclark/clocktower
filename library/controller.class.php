@@ -199,9 +199,9 @@ class baseController
 		$this->action_to_render = $action;
 	}
 
-	function html_email($template = 'email', $email_content_template = false) {
+	function html_email($template = 'email', $email_content_template = false, $variables=array()) {
 
-		include(ROOT . DS . 'library/vendor/CssToInlineStyles/CssToInlineStyles.php');
+		include_once(ROOT . DS . 'library/vendor/other/CssToInlineStyles/CssToInlineStyles.php');
 
 		ob_start();
 
@@ -223,9 +223,9 @@ class baseController
 
 	}
 
-	function text_email($template, $email_content_template = false) {
+	function text_email($template, $email_content_template = false, $variables=array()) {
 
-		include(ROOT . DS . 'library/vendor/html2text.class.php');
+		include_once(ROOT . DS . 'library/vendor/other/html2text.class.php');
 
 		ob_start();
 

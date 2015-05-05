@@ -74,12 +74,19 @@ function add_model_to_database($model_name) {
 			$details_string .= " - Indexed at: ";
 			$first_detail_pass = true;
 			foreach ($table_index as $column) {
-				if (!$first_detail_pass) {
-					$details_string .= ", ";
+				if ($model_to_be_added->$column->type != 'text') {
+					$statement = $db->exec("ALTER TABLE $table_name DROP INDEX $column;");
+					echoc("Index removed on $column\n");
 				}
-				$details_string .= "$column";
-				$first_detail_pass = false;
+				else {
+					if (!$first_detail_pass) {
+						$details_string .= ", ";
+					}
+					$details_string .= "$column";
+					$first_detail_pass = false;
+				}
 			}
+
 		}
 
 		echoc("$details_string\n");
@@ -118,7 +125,7 @@ function add_model_to_database($model_name) {
 
 				// add indexing to column if not already indexed
 				if (!in_array($element->short_name, $table_index)) {
-					$db->exec("ALTER TABLE $table_name ADD FULLTEXT($element->short_name)");
+					$db->exec("ALTER TABLE $table_name ADD FULLTEXT($element->short_name);");
 					echoc("$element->short_name now indexed\n");
 				}
 			}

@@ -13,8 +13,8 @@ function routeURL($url) {
 }
 
 function mvacc_autoload($className) {
-	
-	if (strpos($className,'Controller') === false && strpos($className,'Form') === false) {	
+
+	if (strpos($className,'Controller') === false && strpos($className,'Form') === false) {
 		if (file_exists(ROOT . DS . 'application' . DS . 'models' . DS . strtolower($className) . '.php')) {
 		require_once(ROOT . DS . 'application' . DS . 'models' . DS . strtolower($className) . '.php');
 		}
@@ -26,15 +26,15 @@ function mvacc_autoload($className) {
 		if (file_exists(ROOT . DS . 'application' . DS . 'forms' . DS . strtolower($file_name) . '.php'))
 			require_once(ROOT . DS . 'application' . DS . 'forms' . DS . strtolower($file_name) . '.php');
 	}
-	else {
+	else if (strpos($className,'Controller')){
 		// if the class is a controller, we look for it in its own file
 		$className = str_replace('Controller', '', $className);
-		$controller_name = strtolower($className);
-		if (file_exists(ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($className) . '.php')) {
-			require_once(ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($className) . '.php');
+		if (file_exists(ROOT . DS . 'application' . DS . 'controllers' . DS . $className . '.php')) {
+			require_once(ROOT . DS . 'application' . DS . 'controllers' . DS . $className . '.php');
 		}
+		else logger::Controller("Could not find controller file '$className.php'. Please ensure case sensitivity.");
 	}
 }
-  
+
 
 ?>

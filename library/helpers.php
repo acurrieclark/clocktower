@@ -7,10 +7,11 @@ function icon($name, $colour="") {
 	return "<span $style class=\"glyphicon glyphicon-$name\"></span>";
 }
 
-function label($text, $type='') {
+function label($text, $type='default') {
 	if ($type)
 		$type = ' label-'.$type;
-	return '<span class="label'.$type.'">'.$text.'</span>';
+	if (empty($text)) return '';
+	else return '<span class="label'.$type.'">'.$text.'</span>';
 }
 
 function include_security() {
@@ -265,13 +266,13 @@ function messages() {
 	global $flash;
 
 if ($flash->message) {?>
-	<div class="alert alert-success alert-dismissable">
+	<div class="alert alert-success alert-dismissable" id="system-message-flash">
 	 	<button class="close" data-dismiss="alert">×</button>
 		<?php echo $flash->message; ?>
 	</div>
 <?php } ?>
 <?php if ($flash->error) {?>
-	<div class="alert alert-danger alert-dismissable">
+	<div class="alert alert-danger alert-dismissable" id="system-message-error">
 	 	<button class="close" data-dismiss="alert">×</button>
 		<?php echo $flash->error; ?>
 	</div>
@@ -279,13 +280,13 @@ if ($flash->message) {?>
 <?php }
 ?>
 <?php if ($flash->warning): ?>
-	<div class="alert alert-warning alert-dismissable">
+	<div class="alert alert-warning alert-dismissable" id="system-message-warning">
 	  <button class="close" data-dismiss="alert">×</button>
 	  <strong>Warning - </strong> <?= $flash->warning ?>
 	</div>
 <?php endif ?>
 <?php if ($flash->information): ?>
-	<div class="alert alert-info alert-dismissable">
+	<div class="alert alert-info alert-dismissable" id="system-message-info">
 	  <button class="close" data-dismiss="alert">×</button>
 	  <?= $flash->information ?>
 	</div>
@@ -314,7 +315,7 @@ function start_form($model, $address="", $style="normal") {
 	$model->setup_security();
 }
 
-function end_form($model, $button_text="submit", $cancel=true) {
+function end_form($model, $button_text="Submit", $cancel=true) {
 	if ($button_text == '') $button_text = 'Submit';
 	$model->form_security();
 	$model->form_button($button_text, $cancel);

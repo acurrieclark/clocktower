@@ -65,7 +65,7 @@ else {
 		try {
 			add_model_to_database($model_name);
 		} catch (Exception $e) {
-			echo "Could add model $table_name to database\n";
+			echo "Could not add model $table_name to database\n";
 			echoc($e->getMessage()."\n", RED);
 			return;
 		}

@@ -8,6 +8,7 @@ abstract class model
 
 	function __construct($data = array())
 	{
+		global $app;
 		$this->id = new id('id');
 		$this->updated_at = new timestamp('updated_at');
 		$this->created_at = new timestamp('created_at');
@@ -27,8 +28,11 @@ abstract class model
 				}
 			}
 
-			$element->parent_model = get_class($this);
-			$element->parent_model_id = $this->id->value;
+			if (!isset($element->parent_model))
+				$element->parent_model = get_class($this);
+			if ($this->id->value)
+				$element->parent_model_id = $this->id->value;
+			else if (!empty($app)) $element->parent_model_id = $app->id;
 		}
 	}
 
@@ -66,12 +70,6 @@ abstract class model
 			// model could not be saved
 			else {
 				logger::Model('Could not be saved');
-				if (isset($this->errors)) {
-					foreach($this->errors as $error) {
-						logger::Model("MYSQL Error: ".$error);
-					}
-					unset($this->errors);
-				}
 				return false;
 			}
 		}
@@ -143,6 +141,7 @@ abstract class model
 			return true;
 		}
 		else {
+			logger::Model('Could not be updated');
 			$this->cancel_reset_security();
 			return false;
 		}
@@ -176,7 +175,14 @@ abstract class model
 		if (!$keep_id) unset($committable['id']);
 		$committable['created_at'] = date('Y-m-d H:i:s');
 		$table_name = Inflection::pluralize(get_class($this));
-		return dbAbstraction::insert($table_name, $committable);
+		$dbAbstraction = new dbAbstraction;
+		$insert_id = $dbAbstraction->insert($table_name, $committable);
+		if (!empty($dbAbstraction->errors)) {
+			foreach($dbAbstraction->errors as $error) {
+				logger::Model("MYSQL Error: ".$error);
+			}
+		}
+		return $insert_id;
 	}
 
 	function commit_update() {
@@ -189,7 +195,13 @@ abstract class model
 		unset($committable['created_at']);
 		$table_name = Inflection::pluralize(get_class($this));
 		$dbAbstraction = new dbAbstraction;
-		return $dbAbstraction->update($table_name, $this->id->value, $committable);
+		$insert_id = $dbAbstraction->update($table_name, $this->id->value, $committable);
+		if (!empty($dbAbstraction->errors)) {
+			foreach($dbAbstraction->errors as $error) {
+				logger::Model("MYSQL Error: ".$error);
+			}
+		}
+		return $insert_id;
 	}
 
 	function form($address="", $button_text="Submit",  $style = "normal", $cancel = true) {
@@ -225,11 +237,11 @@ abstract class model
 
 	function main_form($include_security = true)
 	{
-		if ($include_security) $this->setup_security();
+		if ($include_security) self::setup_security();
 
 		$this->form_elements();
 
-		if ($include_security) $this->form_security();
+		if ($include_security) self::form_security();
 	}
 
 	function form_button($text, $cancel = true) {
@@ -247,7 +259,7 @@ abstract class model
 		<?php
 	}
 
-	function setup_security() {
+	static function setup_security() {
 		// Create Security for form
 		global $app;
 		if (!isset($app->security_token)) {
@@ -259,7 +271,7 @@ abstract class model
 
 	}
 
-	function form_security() {
+	static function form_security() {
 		global $app;
 		$security_token = new hidden(array("security_token", 'hidden'));
 		$security_token->value = $app->security_token;
@@ -579,6 +591,7 @@ abstract class model
 							$inter_models[$element['model']] = new $element['model']();
 						}
 						$this->$element_short_name = $inter_models[$element['model']]->$element['element'];
+						$this->$element_short_name->parent_model = $element['model'];
 					}
 					else $this->$element_short_name = new $element_type($element);
 					if ($this->$element_short_name->requires_confirmation()) {
@@ -642,6 +655,8 @@ abstract class model
 			$options['page'] = 1;
 		if (!isset($options['limit']))
 			$options['limit'] = PAGINATE_LIMIT;
+		if (!isset($options['no_containers']))
+			$options['no_containers'] = FALSE;
 
 		$class = get_called_class();
 
@@ -739,20 +754,41 @@ abstract class model
 		}
 	}
 
-	public function values() {
+	public function values($options = array()) {
+
+		if (!isset($options['all']))
+			$all = false;
+		else $all = $options['all'];
+		if (!isset($options['raw']))
+			$raw = false;
+		else $raw = $options['raw'];
+
 		foreach ($this as $element) {
-			if (isset($element->value)) {
-				$returnable[$element->short_name] = $element->value;
+			if (isset($element->value) && ($element->should_be_shown() || $all)) {
+				if (!$raw)
+					$returnable[$element->short_name] = $element->show();
+				else
+					$returnable[$element->short_name] = $element->value;
 			}
 		}
 		return $returnable;
 	}
 
-	public function json_values() {
+	public function json_values($options = array()) {
+
+		if (!isset($options['all']))
+			$all = false;
+		else $all = $options['all'];
+		if (!isset($options['raw']))
+			$raw = false;
+		else $raw = $options['raw'];
+
 		$object = new stdClass();
-		if (!empty($this->values));
-		foreach ($this->values() as $key => $value) {
-			$object->$key = $value;
+		$values = $this->values(array('all' => $all, 'raw' => $raw));
+		if (!empty($values)) {
+			foreach ($values as $key => $value) {
+				$object->$key = show_safely($value);
+			}
 		}
 		return json_encode($object);
 	}

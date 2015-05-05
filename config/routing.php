@@ -24,5 +24,6 @@ $post_routing = array(
 	'users' => array("register" => "create-registration",
 					'login' => "create_login",
 					'password-reset' => 'reset-password',
-					"new-password" => "save-new-password")
+					"new-password" => "save-new-password",
+					"change-password" => "update-password")
 );

@@ -1,0 +1,8 @@
+{
+    "config": {
+        "vendor-dir": "library/vendor"
+    },
+    "require": {
+        "php-mime-mail-parser/php-mime-mail-parser": "~2.0"
+    }
+}

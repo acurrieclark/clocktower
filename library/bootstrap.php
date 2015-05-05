@@ -15,6 +15,8 @@ require_once (ROOT . DS . 'library' . DS . 'setup_functions.php');
 require_once (ROOT . DS . 'library' . DS . 'helpers.php');
 require_once (ROOT . DS . 'library' . DS . 'element.class.php');
 
+require_once (ROOT . DS . 'library' .DS . 'vendor' . DS . 'autoload.php');
+
 require_once (ROOT . DS . 'library' . DS . 'mailer' . DS . 'swift_required.php');
 
 // Load all the helpers

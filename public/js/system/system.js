@@ -94,3 +94,59 @@ function add_delete_row(row_id, address) {
   };
 
 }(jQuery));
+
+function textCounter(to_be_counted, countfield, maxlimit) {
+        var field = $("#"+to_be_counted).find('textarea');
+        var counter = $("#"+countfield).find('span');
+        var nl_adjustment;
+        var newLines = field.val().match(/(\r\n|\n|\r)/g);
+
+        if (newLines !== null) {
+          nl_adjustment = newLines.length;
+        }
+        else nl_adjustment = 0;
+
+        count = maxlimit - field.val().length - nl_adjustment;
+
+
+
+
+        if (count < 0) count = 0;
+
+        if (count === 0) // if too long...trim it!
+            {
+              if (field.val().match(/(\r\n|\n|\r)$/) !== null) {
+                var adjust = 0;
+                var count_adjust = 0;
+                if (field.val().length + nl_adjustment - maxlimit == 2) adjust = 1;
+                if (field.val().length + nl_adjustment - maxlimit !== 0) {
+                  field.val(field.val().substring(0, maxlimit - nl_adjustment + adjust));
+                  count = maxlimit - field.val().length - nl_adjustment + 1;
+                }
+              }
+              else
+                field.val(field.val().substring(0, maxlimit - nl_adjustment));
+          }
+
+          counter.text(count);
+
+        if (count < 10) {
+          $("#"+countfield).removeClass('label-success');
+          $("#"+countfield).removeClass('label-warning');
+          $("#"+countfield).addClass('label-danger');
+        }
+        else if (count < 50) {
+          $("#"+countfield).removeClass('label-danger');
+          $("#"+countfield).removeClass('label-success');
+          $("#"+countfield).addClass('label-warning');
+        }
+        else {
+          $("#"+countfield).addClass('label-success');
+          $("#"+countfield).removeClass('label-warning');
+          $("#"+countfield).removeClass('label-danger');
+        }
+      }
+
+jQuery.nl2br = function(varTest){
+    return varTest.replace(/(\r\n|\n\r|\r|\n)/g, "<br>");
+};

@@ -3,6 +3,8 @@
 define('ROOT', dirname(dirname(__FILE__)));
 define('DS', "/");
 
+include(ROOT."/../config/server-config.php");
+
 // Enable GZip encoding.
 ob_start("ob_gzhandler");
 

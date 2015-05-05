@@ -12,9 +12,6 @@ class formTemplate extends model
 		unset($this->id);
 		unset($this->created_at);
 		unset($this->updated_at);
-		foreach ($this as $element) {
-			unset($element->parent_model_id);
-		}
 	}
 
 }

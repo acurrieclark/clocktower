@@ -8,7 +8,7 @@ class dbAbstraction{
 	 * @return void
 	 * @author Alex Currie-Clark
 	 **/
- 	function check_input($value)
+ 	static function check_input($value)
 	 	{
 			$db = db::getInstance();
 		 	$value = $db->quote(stripslashes($value));
@@ -266,7 +266,7 @@ class dbAbstraction{
 		global $db_cache;
 		$query = is_null($query) ? $this->sql : $query;
 		if ($query) {
-			
+
 		}
 		if (isset($db_cache[$query])) {
 			logger::Database('Cached SQL = '.$query);
@@ -296,7 +296,7 @@ class dbAbstraction{
 			$first_pass = true;
 			$this->sql = "SELECT * FROM (";
 			foreach ($table as $key => $table_name) {
-				$table[$key] = $this->check_input($table_name);
+				$table[$key] = self::check_input($table_name);
 				$this->sql .= ($first_pass) ? '' : ' UNION';
 				$this->sql .= " ( SELECT * FROM ".$table[$key].")";
 				$first_pass = false;
@@ -305,13 +305,13 @@ class dbAbstraction{
 			echo $this->sql;
 		}
 		else {
-			$table = $this->check_input($table);
+			$table = self::check_input($table);
 			$this->sql = "SELECT * FROM $table";
 		}
 	}
 
 	public function count($table) {
-		$table = $this->check_input($table);
+		$table = self::check_input($table);
 		$this->sql = "SELECT count(*) FROM $table";
 	}
 
@@ -344,19 +344,19 @@ class dbAbstraction{
 				$field_values = explode(',', $field);
 				$field = "CONCAT_WS(' '";
 				foreach ($field_values as $field_value) {
-					$field .= ', `'.$this->check_input(trim($field_value)).'`';
+					$field .= ', `'.self::check_input(trim($field_value)).'`';
 				}
 				$field .= ')';
 			}
 			else {
-				$field = ($operator == ' ') ? $this->check_input($field) : '`'.$this->check_input($field).'`';
+				$field = ($operator == ' ') ? self::check_input($field) : '`'.self::check_input($field).'`';
 			}
 
 			if ($value === null) {
 				$value = 'NULL';
 			}
 			else {
-				$value = '\''.$this->check_input($value).'\'';
+				$value = '\''.self::check_input($value).'\'';
 			}
 		}
 		if (!isset($this->flags['where']))
@@ -381,8 +381,8 @@ class dbAbstraction{
 	 */
 	public function limit($offset, $limit)
 	{
-		$offset = $this->check_input($offset);
-		$limit = $this->check_input($limit);
+		$offset = self::check_input($offset);
+		$limit = self::check_input($limit);
 		$this->sql .= " LIMIT $offset, $limit";
 	}
 
@@ -400,8 +400,8 @@ class dbAbstraction{
 	public function andClause($field, $value)
 	{
 
-		$value = $this->check_input($value);
-		$field = $this->check_input($field);
+		$value = self::check_input($value);
+		$field = self::check_input($field);
 		$this->sql .= " AND `$field`='$value'";
 	}
 
@@ -417,8 +417,8 @@ class dbAbstraction{
 	 */
 	public function orderBy($fieldname, $order='ASC')
 	{
-		$fieldname = $this->check_input($fieldname);
-		$order = $this->check_input($order);
+		$fieldname = self::check_input($fieldname);
+		$order = self::check_input($order);
 		if (!isset($this->flags['order']))
 			$this->sql .= " ORDER BY `$fieldname` $order";
 		else $this->sql .= ", `$fieldname` $order";

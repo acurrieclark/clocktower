@@ -69,7 +69,10 @@ class element
 		$results = $model::find_all(array('where' => array($this->short_name => $this->value)));
 
 		// discounts the current database entry so that updating works correctly
-		unset($results[$this->parent_model_id]);
+		if ($this->parent_model_id)
+			unset($results[$this->parent_model_id]);
+
+		logger::validation(sizeof($this->parent_model_id));
 
 		if ($results && sizeof($results) > 0) {
 			return false;
@@ -170,7 +173,14 @@ class element
 
 		}
 
+	function input_hidden() {
+		 ?>
+		 <input id="<?php echo $this->short_name.'_'.$this->parent_model ?>" type="hidden" name="<?php echo $this->input_name ?>" value="<?php echo show_safely($this->value); ?>" class="id <?php echo $this->short_name;?>">
+		 <?php
+		}
+
 	}
+
 
 /**
 * String Class
@@ -180,7 +190,7 @@ class string extends element
 
 	function input() {
 		?>
-		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="text" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control text <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
+		<input id="<?php echo $this->short_name.'_'.$this->parent_model ?>" type="text" name="<?php echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control text <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
 		<?php
 		$this->show_error_message();
 	}
@@ -191,7 +201,7 @@ class password extends string {
 
 	function input() {
 		?>
-		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="password" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control password <?php echo $this->short_name;?>"  placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
+		<input id="<?php echo $this->short_name.'_'.$this->parent_model ?>" type="password" name="<?php echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control password <?php echo $this->short_name;?>"  placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
 		<?php
 		$this->show_error_message();
 	}
@@ -275,14 +285,14 @@ class drop extends element {
 
 		<div class="dropbox">
 			<select name="<?php echo $this->input_name ?>" id="<?php echo $this->short_name.'_'.$this->parent_model ?>" class="form-control">
-				<option value="nochoice" <? if ($posted_value == "nochoice") echo 'selected="selected"' ?> >Please choose</option>
+				<option value="nochoice" <?php if ($posted_value == "nochoice") echo 'selected="selected"' ?> >Please choose</option>
 				<?php foreach ($this->list as $item_name) {	?>
 				<option value="<?php echo make_short($item_name); ?>" <?php if (make_short($this->value) == make_short($item_name) && $this->value != "" && $this->value != "nochoice") echo 'selected="selected"' ?>><?php echo $item_name; ?></option>
 				<?php } ?>
 				</select>
 				<?php $this->show_error_message() ?>
 		</div>
-				<?
+				<?php
 	}
 
 	function process($data) {
@@ -391,7 +401,7 @@ class checkbox extends element {
 			?>
 			<div class="checkbox">
 			<label>
-			<input type="checkbox" name="<? echo $this->input_name."[".make_short($item_name)."]" ?>"<?php echo $checked; ?> class="<?php echo make_short($item_name); ?>" value="<?php echo make_short($item_name); ?>" id="<? echo make_short($this->name).make_short($item_name).'_'.$this->parent_model ?>"> <?php echo $item_name ?>
+			<input type="checkbox" name="<?php echo $this->input_name."[".make_short($item_name)."]" ?>"<?php echo $checked; ?> class="<?php echo make_short($item_name); ?>" value="<?php echo make_short($item_name); ?>" id="<?php echo make_short($this->name).make_short($item_name).'_'.$this->parent_model ?>"> <?php echo $item_name ?>
 			</label>
 
 		</div>
@@ -432,6 +442,23 @@ class number extends string {
 
 }
 
+class float extends number {
+
+	function validate() {
+
+		if (($this->value == "") && $this->is_required()) $this->error = not_present;
+		else if (!is_valid_number($this->value) && ($this->value != '')) $this->error = not_number;
+		else if ($this->should_be_unique()) {
+			if (!$this->is_unique())
+			 $this->error = not_unique;
+		 }
+	}
+
+	function database_create_code() {
+		return "FLOAT NULL";
+	}
+}
+
 class phone_number extends string {
 
 	function __construct($element) {
@@ -439,9 +466,9 @@ class phone_number extends string {
 	}
 
 	function validate() {
-		parent::validate();
 		if (($this->value == '' && $this->is_required()) || $this->value)
 			is_valid_phone_number($this->value, $phone_number_error_no, $this->error);
+		parent::validate();
 	}
 
 }
@@ -540,7 +567,7 @@ class id extends number {
 
 	function input() {
 		?>
-			<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="hidden" name="<?php echo $this->input_name ?>" value="<?php echo show_safely($this->value); ?>" class="id <?php echo $this->short_name;?>">
+			<input id="<?php echo $this->short_name.'_'.$this->parent_model ?>" type="hidden" name="<?php echo $this->input_name ?>" value="<?php echo show_safely($this->value); ?>" class="id <?php echo $this->short_name;?>">
 		<?php
 
 	}
@@ -569,7 +596,7 @@ class email extends string {
 
 	function input() {
 		?>
-		<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="email" name="<? echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control email <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
+		<input id="<?php echo $this->short_name.'_'.$this->parent_model ?>" type="email" name="<?php echo $this->input_name ?>" value= "<?php echo show_safely($this->value); ?>" class="form-control email <?php echo $this->short_name;?> <?= $this->style ?>" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>>
 		<?php
 		$this->show_error_message();
 	}
@@ -615,7 +642,7 @@ class radio extends element
 					?>
 					<div class="<?= $label_class ?>">
 						<label>
-							<input type="radio" id="<?php echo $this->input_name."_".make_short($option_name).'_'.$this->parent_model; ?>" name="<?php echo $this->input_name; ?>" value="<?php echo make_short($option_name) ?>" <? if (make_short($this->value) == make_short($option_name) && $this->value != "") echo 'checked="checked"' ?> /> <?php echo $option_name; ?>
+							<input type="radio" id="<?php echo $this->input_name."_".make_short($option_name).'_'.$this->parent_model; ?>" name="<?php echo $this->input_name; ?>" value="<?php echo make_short($option_name) ?>" <?php if (make_short($this->value) == make_short($option_name) && $this->value != "") echo 'checked="checked"' ?> /> <?php echo $option_name; ?>
 						</label>
 					</div>
 				<?php
@@ -629,6 +656,10 @@ class radio extends element
 
 	function validate() {
 		parent::validate();
+		if ($this->not_required && $this->value == "") {
+			$this->error = "";
+			return true;
+		}
 		if ($this->error == not_present)
 			$this->error = not_selected;
 		else {
@@ -675,7 +706,7 @@ class text extends element
 	function input() {
 
 		?>
-	<textarea rows="10" id="<? echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="input-block-level form-control"<?php if ($this->style): ?> style="width: 100%"<?php endif ?><?= $this->not_required ? '' : " required" ?>><? echo show_safely($this->value) ?></textarea>
+	<textarea rows="10" id="<?php echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="input-block-level form-control"<?php if ($this->style): ?> style="width: 100%"<?php endif ?><?= $this->not_required ? '' : " required" ?>><?php echo show_safely($this->value) ?></textarea>
 		<?php
 
 		$this->show_error_message();
@@ -828,7 +859,7 @@ class smallText extends element {
 
 	function input() {
 		?>
-	<textarea rows="3" id="<? echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="<?= ($this->style) ? $this->style : '' ?> form-control" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>><? echo show_safely($this->value) ?></textarea>
+	<textarea rows="3" id="<?php echo $this->short_name.'_'.$this->parent_model ?>" name="<?php echo $this->input_name; ?>" class="<?= ($this->style) ? $this->style : '' ?> form-control" placeholder="<?= $this->name ?>"<?= $this->not_required ? '' : " required" ?>><?php echo show_safely($this->value) ?></textarea>
 		<?php
 
 		$this->show_error_message();
@@ -838,38 +869,6 @@ class smallText extends element {
 			javascript_start();
 
 			?>
-
-			function textCounter(to_be_counted, countfield, maxlimit) {
-				var field = $("#"+to_be_counted).find('textarea');
-				var counter = $("#"+countfield).find('span');
-
-				count = maxlimit - field.val().length;
-
-				if (count < 1) count = 0;
-
-				if (count < 1) // if too long...trim it!
-			    	{
-						field.val(field.val().substring(0, maxlimit));
-					}
-
-			    counter.text(count);
-
-				if (count < 10) {
-					$("#"+countfield).removeClass('label-success');
-					$("#"+countfield).removeClass('label-warning');
-					$("#"+countfield).addClass('label-danger');
-				}
-				else if (count < 50) {
-					$("#"+countfield).removeClass('label-danger');
-					$("#"+countfield).removeClass('label-success');
-					$("#"+countfield).addClass('label-warning');
-				}
-				else {
-					$("#"+countfield).addClass('label-success');
-					$("#"+countfield).removeClass('label-warning');
-					$("#"+countfield).removeClass('label-danger');
-				}
-			}
 
 			$('#<?php echo $this->short_name.'_'.$this->parent_model ?>').keydown(function(event){
 				textCounter('<?php echo $this->short_name.'_'.$this->parent_model."_container" ?>','<?php echo $this->short_name.'_'.$this->parent_model ?>_counter', <?php echo $this->limit ?>);
@@ -1067,7 +1066,7 @@ class timepicker extends string {
 
 		?>
 
-		$('#<? echo $this->short_name.'_'.$this->parent_model ?>').datetimepicker({
+		$('#<?php echo $this->short_name.'_'.$this->parent_model ?>').datetimepicker({
       pickDate: false,
 	  useSeconds: false
     });
@@ -1079,7 +1078,7 @@ class timepicker extends string {
 		?>
 		<div class="time-picker">
 
-			<div id="<? echo $this->short_name.'_'.$this->parent_model ?>" data-format="HH:mm PP" >
+			<div id="<?php echo $this->short_name.'_'.$this->parent_model ?>" data-format="HH:mm PP" >
 			    <input type="text" name="<?= $this->input_name ?>" value="<?= $this ?>" class="form-control" />
 			  </div>
 		</div>
@@ -1107,7 +1106,7 @@ class datepicker extends date
 
 		?>
 
-		$('#<? echo $this->short_name.'_'.$this->parent_model ?>').datetimepicker({
+		$('#<?php echo $this->short_name.'_'.$this->parent_model ?>').datetimepicker({
       pickTime: false,
 	  maskInput: true
     });
@@ -1119,7 +1118,7 @@ class datepicker extends date
 		?>
 		<div class="date-picker">
 
-			<div id="<? echo $this->short_name.'_'.$this->parent_model ?>" class="date" data-date-format="DD/MM/YYYY">
+			<div id="<?php echo $this->short_name.'_'.$this->parent_model ?>" class="date" data-date-format="DD/MM/YYYY">
 			    <input type="text" name="<?= $this->input_name ?>" value="<?= $this ?>" class="form-control" />
 
 			  </div>
@@ -1196,7 +1195,7 @@ class hidden extends element
 
 	function input() {
 		?>
-			<input id="<? echo $this->short_name.'_'.$this->parent_model ?>" type="hidden" name="<? echo $this->input_name ?>" value="<?php echo show_safely($this->value); ?>" class="hidden <?php echo $this->short_name;?>" />
+			<input id="<?php echo $this->short_name.'_'.$this->parent_model ?>" type="hidden" name="<?php echo $this->input_name ?>" value="<?php echo show_safely($this->value); ?>" class="hidden <?php echo $this->short_name;?>" />
 		<?php
 
 	}
@@ -1371,7 +1370,7 @@ class _image extends container {
 		echo 'Please select an image';
 	}
 
-	function input() {
+	function input($add_button = false) {
 
 		// loads the image manager module, if it has not already been loaded elsewhere
 		include_image_selection();
@@ -1383,7 +1382,7 @@ class _image extends container {
 					$short_name = $this->short_name.$key."_".$element->short_name;
 					?>
 
-					<input id="<? echo $short_name ?>" type="hidden" name="<?php echo $input_name ?>" value="<?php echo show_safely($element->value); ?>" class="<?php echo $this->short_name;?> <?= $element->short_name ?>" />
+					<input id="<?php echo $short_name ?>" type="hidden" name="<?php echo $input_name ?>" value="<?php echo show_safely($element->value); ?>" class="<?php echo $this->short_name;?> <?= $element->short_name ?>" />
 
 					<?php
 				}
@@ -1477,7 +1476,7 @@ class timestamp extends element
 
 	function input() {}
 
-	function show($format = 'jS F Y') {
+	function show($format = 'jS F Y \a\t G:i:s') {
 		return date($format, strtotime($this->value));
 	}
 

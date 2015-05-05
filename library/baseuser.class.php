@@ -40,7 +40,7 @@ class baseUser extends systemModel
 		return parent::save($keep_id, $run_validations);
 	}
 
-	function update($verify = true) {
+	function update($verify = true, $mask_commit = false) {
 		logger::Model('Checking user');
 
 		$user_check = user::find(array('where' => array('id' => $this->id->value)));
@@ -81,7 +81,7 @@ class baseUser extends systemModel
 	return $hash;
 	}
 
-	function login($email, $password, $remember = false) {
+	static function login($email, $password, $remember = false) {
 		logger::back(json_encode($login_redirect));
 		$user = user::find(array('where' => array('email' => $email)));
 		if (!empty($user)) {
@@ -120,14 +120,14 @@ class baseUser extends systemModel
 		user::set_security_timeout();
 	}
 
-	function check_password($hashed_password, $salt, $password) {
+	static function check_password($hashed_password, $salt, $password) {
 		$hasher = new PasswordHash(8, false);
 		$check = $hasher->CheckPassword($password . (string)$salt, $hashed_password);
 		unset($hasher);
 		return $check;
 	}
 
-	function autoload_user() {
+	static function autoload_user() {
 		$user = user::load_from_session();
 		if (!$user) $user = user::load_from_cookie();
 		if ($user && $user->status->value == 'Active') {
@@ -143,7 +143,7 @@ class baseUser extends systemModel
 		user::set_security_timeout();
 	}
 
-	function load_from_session() {
+	static function load_from_session() {
 		if (session_id() != "" && session_id() != "no_id") {
 			$user = user::find(array('where' => array('session_id' => session_id())));
 			if ($user)
@@ -152,7 +152,7 @@ class baseUser extends systemModel
 		else return false;
 	}
 
-	function load_from_cookie() {
+	static function load_from_cookie() {
 		if (isset($_COOKIE['auth_key']) && $_COOKIE['auth_key'] != "no_token" && $_COOKIE['auth_key'] != "") {
 			$user = user::find(array( 'where' => array('remember_token' => $_COOKIE['auth_key'])));
 			if ($user) {

@@ -1,0 +1,40 @@
+#!/usr/bin/php
+<?php
+
+define('ROOT', dirname(dirname(__FILE__)));
+define('DS', "/");
+
+require(ROOT."/script/script_includes.php");
+
+logger::mailer('script/mailhandler Running');
+
+$Parser = new PhpMimeMailParser\Parser();
+
+// Or specify a php file resource (stream) to the mime mail :
+$Parser->setStream(fopen("php://stdin", "r"));
+
+// We can get all the necessary data
+$to = $Parser->getHeader('to');
+$from = $Parser->getHeader('from');
+$subject = $Parser->getHeader('subject');
+
+$text = $Parser->getMessageBody('text');
+$html = $Parser->getMessageBody('html');
+$htmlEmbedded = $Parser->getMessageBody('htmlEmbedded'); //HTML Body included data
+
+$from = get_email($from)[0];
+
+$user = user::find(['where' => ['email' => $from]]);
+if (!empty($user)) $userid = $user->id->value;
+
+$message_properties = ['email' => get_email($from)[0], 'Content' => $text, 'Subject' => $subject, 'UserID' => $userid, 'Source' => 'email'];
+
+$message = new received_message($message_properties);
+
+$message->save();
+
+logger::write();
+
+// and the attachments also
+// $attach_dir = '/path/to/save/attachments/';
+// $Parser->saveAttachments($attach_dir);

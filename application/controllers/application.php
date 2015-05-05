@@ -8,12 +8,12 @@ class applicationController extends baseController
 
 	function __construct() {
 		parent::__construct();
+		$this->template->set('header-title', '');
 	}
 
 	function must_be_logged_in() {
 		must_be_logged_in();
 	}
-
 
 	function must_be_admin() {
 		if (!is_admin()){
