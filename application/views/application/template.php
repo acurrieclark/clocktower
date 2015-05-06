@@ -27,7 +27,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-      <? $this->template->content_for("body"); ?>
+      <?php $this->template->content_for("body"); ?>
 
         <header id="header" class="">
             <?php $this->template->content_for("header"); ?>
